@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This layout is ordered around the centering of the button because this
+     allows for the other views to be centered in a nicer fashion, and
+     allows them to be seen while keyboard is open. -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/general_padding">
+    <info.hoang8f.widget.FButton
+        android:id="@+id/login_btn"
+        android:layout_width="@dimen/log_in_view_width"
+        android:layout_height="wrap_content"
+        app:buttonColor="@color/color_peter_river"
+        app:shadowColor="@color/color_belize_hole"
+        app:shadowEnabled="true"
+        app:shadowHeight="@dimen/fbtn_shadow_height"
+        app:cornerRadius="@dimen/fbtn_corner_radius"
+        android:text="@string/log_in_text"
+        android:layout_centerInParent="true" />
+    <com.wrapp.floatlabelededittext.FloatLabeledEditText
+        android:id="@+id/password_et_holder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:fletPadding="@dimen/float_edit_text_padding"
+        android:layout_centerInParent="true"
+        android:layout_above="@id/login_btn">
+        <EditText
+            android:id="@+id/password_et"
+            android:layout_width="@dimen/log_in_view_width"
+            android:layout_height="wrap_content"
+            android:hint="@string/password_text"
+            android:inputType="textPassword"/>
+    </com.wrapp.floatlabelededittext.FloatLabeledEditText>
+    <com.wrapp.floatlabelededittext.FloatLabeledEditText
+        android:id="@+id/username_et_holder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:fletPadding="@dimen/float_edit_text_padding"
+        android:layout_centerInParent="true"
+        android:layout_above="@id/password_et_holder">
+        <EditText
+            android:id="@+id/username_et"
+            android:layout_width="@dimen/log_in_view_width"
+            android:layout_height="wrap_content"
+            android:hint="@string/username_text"
+            android:inputType="text"/>
+    </com.wrapp.floatlabelededittext.FloatLabeledEditText>
+</RelativeLayout>
