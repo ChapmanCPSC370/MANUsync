@@ -11,6 +11,7 @@ import dagger.Component;
 @Singleton
 @Component(modules = ApplicationModule.class)
 public interface MANUComponent {
+    void inject(MainMenuActivity mainMenuActivity);
 
     final class Instance {
         private static MANUComponent component;

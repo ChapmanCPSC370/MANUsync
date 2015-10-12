@@ -1,5 +1,6 @@
 package edu.chapman.manusync;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -15,6 +16,7 @@ public class LogInActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log_in);
+        initViews();
     }
 
     /* Initialzing views, and attaching appropriate listeners */
@@ -26,7 +28,8 @@ public class LogInActivity extends AppCompatActivity {
         logIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //move to new view.
+                Intent intent = new Intent(LogInActivity.this, MainMenuActivity.class);
+                startActivity(intent);
             }
         });
 
