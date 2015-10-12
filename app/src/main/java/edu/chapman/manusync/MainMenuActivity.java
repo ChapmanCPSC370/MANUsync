@@ -6,6 +6,8 @@ import android.widget.GridView;
 
 import javax.inject.Inject;
 
+import edu.chapman.manusync.adapter.MainMenuViewAdapter;
+
 /**
  * Created by Nicholas Corder - corde116@mail.chapman.edu on 10/11/2015.
  */

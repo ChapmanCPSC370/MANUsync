@@ -12,6 +12,7 @@ import dagger.Component;
 @Component(modules = ApplicationModule.class)
 public interface MANUComponent {
     void inject(MainMenuActivity mainMenuActivity);
+    void inject(NewLotActivity newLotActivity);
 
     final class Instance {
         private static MANUComponent component;

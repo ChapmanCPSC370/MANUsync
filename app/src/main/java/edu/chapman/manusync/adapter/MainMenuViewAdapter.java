@@ -1,4 +1,4 @@
-package edu.chapman.manusync;
+package edu.chapman.manusync.adapter;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -14,6 +14,9 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import edu.chapman.manusync.listener.MainMenuItemOnClickListener;
+import edu.chapman.manusync.provider.MenuItemProvider;
+import edu.chapman.manusync.R;
 import edu.chapman.manusync.dto.MainMenuItemDTO;
 
 /**
@@ -28,7 +31,7 @@ public class MainMenuViewAdapter extends BaseAdapter {
     @Inject
     public MainMenuViewAdapter(Context context, MenuItemProvider menuItemProvider) {
         this.context = context;
-        menuItems = menuItemProvider.getImages();
+        menuItems = menuItemProvider.getMenuItems();
     }
 
     @Override
@@ -60,6 +63,7 @@ public class MainMenuViewAdapter extends BaseAdapter {
         itemImage.setImageBitmap(imageBitmap);
         TextView itemName = (TextView) view.findViewById(R.id.main_menu_item_tv);
         itemName.setText(current.getName());
+        view.setOnClickListener(new MainMenuItemOnClickListener(current));
 
         return view;
     }

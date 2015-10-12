@@ -17,6 +17,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".MainMenuActivity" />
+        <activity android:name=".NewLotActivity" />
     </application>
 
 </manifest>

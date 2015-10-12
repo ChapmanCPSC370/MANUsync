@@ -1,15 +1,14 @@
-package edu.chapman.manusync;
+package edu.chapman.manusync.provider;
 
 import android.content.Context;
-import android.util.Log;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import edu.chapman.manusync.R;
 import edu.chapman.manusync.dto.MainMenuItemDTO;
 
 /**
@@ -17,7 +16,6 @@ import edu.chapman.manusync.dto.MainMenuItemDTO;
  */
 @Singleton
 public class MenuItemProvider {
-    private static final String TAG = MenuItemProvider.class.getSimpleName();
 
     private final Context context;
     private final List<MainMenuItemDTO> items;
@@ -28,24 +26,17 @@ public class MenuItemProvider {
         items = initMenuItems();
     }
 
-    //TODO: Fix naming of item to be human readable/user friendly
     /* Iterates through all items in resource.drawables and gets only the menu items (prefaced with "menu_") */
     private List<MainMenuItemDTO> initMenuItems() {
-        Field[] drawables = R.drawable.class.getFields();
+        String[] itemsArray = context.getResources().getStringArray(R.array.menu_items);
         List<MainMenuItemDTO> itemInformation = new ArrayList<>();
-        for (Field field : drawables) {
-            try {
-                if (field.getName().startsWith("menu_"))
-                    itemInformation.add(new MainMenuItemDTO( field.getName(), field.getInt(null)));
-            } catch (IllegalAccessException e) {
-                Log.e(TAG, "An exception occurred while initializing images", e);
-                return null;
-            }
+        for (String item : itemsArray) {
+            itemInformation.add(new MainMenuItemDTO(item));
         }
         return itemInformation;
     }
 
-    public List<MainMenuItemDTO> getImages() {
+    public List<MainMenuItemDTO> getMenuItems() {
         return items;
     }
 }

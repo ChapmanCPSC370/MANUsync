@@ -3,4 +3,10 @@
     <string name="log_in_text">Log In</string>
     <string name="username_text">username</string>
     <string name="password_text">password</string>
+    <string name="bad_lot_error">There was an error!</string>
+
+    <!-- arrays used for main menu items -->
+    <string-array name="menu_items">
+        <item name="takt_tracking">Takt Tracking</item>
+    </string-array>
 </resources>

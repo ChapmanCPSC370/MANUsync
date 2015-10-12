@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="@dimen/general_padding">
+<!-- TODO: make this layout look better in general -->
+    <Spinner
+        android:id="@+id/production_line_spnr"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="5dp"/>
+    <Spinner
+        android:id="@+id/workstation_number_spnr"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="5dp"/>
+    <Spinner
+        android:id="@+id/part_number_spnr"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="5dp"/>
+    <com.wrapp.floatlabelededittext.FloatLabeledEditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:fletPadding="@dimen/float_edit_text_padding">
+        <EditText
+            android:id="@+id/lot_number_et"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Lot Number" />
+    </com.wrapp.floatlabelededittext.FloatLabeledEditText>
+    <com.wrapp.floatlabelededittext.FloatLabeledEditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:fletPadding="@dimen/float_edit_text_padding">
+        <EditText
+            android:id="@+id/quantity_et"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Quantity" />
+    </com.wrapp.floatlabelededittext.FloatLabeledEditText>
+    <info.hoang8f.widget.FButton
+        android:id="@+id/start_lot_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:buttonColor="@color/color_peter_river"
+        app:shadowColor="@color/color_belize_hole"
+        app:shadowEnabled="true"
+        app:shadowHeight="@dimen/fbtn_shadow_height"
+        app:cornerRadius="@dimen/fbtn_corner_radius"
+        android:text="Start Lot" />
+</LinearLayout>
