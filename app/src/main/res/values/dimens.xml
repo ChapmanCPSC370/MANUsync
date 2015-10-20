@@ -7,4 +7,8 @@
     <dimen name="fbtn_shadow_height">5dp</dimen>
     <dimen name="fbtn_corner_radius">10dp</dimen>
     <dimen name="log_in_view_width">250dp</dimen>
+    <dimen name="verify_new_lot_big_text_size">40sp</dimen>
+    <dimen name="verify_new_lot_label_text_size">25sp</dimen>
+    <dimen name="small_padding_dp">10dp</dimen>
+    <dimen name="medium_padding_dp">20dp</dimen>
 </resources>

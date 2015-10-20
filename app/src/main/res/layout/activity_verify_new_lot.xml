@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/general_padding">
+
+    <TextView
+        android:id="@+id/verify_new_lot_header"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:textColor="@color/color_peter_river"
+        android:textAlignment="center"
+        android:text="Verify New Lot"
+        android:paddingBottom="@dimen/small_padding_dp"
+        android:textSize="55sp" />
+
+    <TextView
+        android:id="@+id/verify_new_lot_production_line"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:paddingLeft="@dimen/medium_padding_dp"
+        android:paddingBottom="@dimen/small_padding_dp"
+        android:textSize="@dimen/verify_new_lot_big_text_size"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Production Line"
+        android:paddingBottom="@dimen/small_padding_dp"
+        android:textSize="@dimen/verify_new_lot_label_text_size" />
+
+
+    <TextView
+        android:id="@+id/verify_new_lot_workstation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:paddingLeft="@dimen/medium_padding_dp"
+        android:paddingBottom="@dimen/small_padding_dp"
+        android:textSize="@dimen/verify_new_lot_big_text_size"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Workstation Number"
+        android:paddingBottom="@dimen/small_padding_dp"
+        android:textSize="@dimen/verify_new_lot_label_text_size" />
+
+
+    <TextView
+        android:id="@+id/verify_new_lot_part_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:paddingLeft="@dimen/medium_padding_dp"
+        android:paddingBottom="@dimen/small_padding_dp"
+        android:textSize="@dimen/verify_new_lot_big_text_size"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Part Number"
+        android:paddingBottom="@dimen/small_padding_dp"
+        android:textSize="@dimen/verify_new_lot_label_text_size" />
+
+
+    <TextView
+        android:id="@+id/verify_new_lot_lot_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:paddingLeft="@dimen/medium_padding_dp"
+        android:paddingBottom="@dimen/small_padding_dp"
+        android:textSize="@dimen/verify_new_lot_big_text_size"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Lot Number"
+        android:paddingBottom="@dimen/small_padding_dp"
+        android:textSize="@dimen/verify_new_lot_label_text_size" />
+
+
+    <TextView
+        android:id="@+id/verify_new_lot_quantity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:paddingLeft="@dimen/medium_padding_dp"
+        android:paddingBottom="@dimen/small_padding_dp"
+        android:textSize="@dimen/verify_new_lot_big_text_size"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Quantity"
+        android:paddingBottom="@dimen/medium_padding_dp"
+        android:textSize="@dimen/verify_new_lot_label_text_size" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <info.hoang8f.widget.FButton
+            android:id="@+id/verify_new_lot"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:buttonColor="@color/color_peter_river"
+            app:shadowColor="@color/color_belize_hole"
+            app:shadowEnabled="true"
+            app:shadowHeight="@dimen/fbtn_shadow_height"
+            app:cornerRadius="@dimen/fbtn_corner_radius"
+            android:layout_weight="45"
+            android:layout_marginRight="@dimen/small_padding_dp"
+            android:text="Start Lot" />
+        <info.hoang8f.widget.FButton
+            android:id="@+id/cancel_new_lot"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:buttonColor="@color/color_peter_river"
+            app:shadowColor="@color/color_belize_hole"
+            app:shadowEnabled="true"
+            android:layout_weight="45"
+            app:shadowHeight="@dimen/fbtn_shadow_height"
+            app:cornerRadius="@dimen/fbtn_corner_radius"
+            android:layout_marginLeft="@dimen/small_padding_dp"
+            android:text="Cancel Lot" />
+    </LinearLayout>
+
+</LinearLayout>
