@@ -1,4 +1,4 @@
-package edu.chapman.manusync;
+package edu.chapman.manusync.activity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -13,6 +13,8 @@ import android.widget.Spinner;
 
 import javax.inject.Inject;
 
+import edu.chapman.manusync.MANUComponent;
+import edu.chapman.manusync.R;
 import edu.chapman.manusync.dto.LotDTO;
 import edu.chapman.manusync.provider.NewLotDataProvider;
 
