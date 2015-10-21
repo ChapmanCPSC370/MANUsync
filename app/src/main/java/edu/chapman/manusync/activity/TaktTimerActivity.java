@@ -3,12 +3,18 @@ package edu.chapman.manusync.activity;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.filippudak.ProgressPieView.ProgressPieView;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import edu.chapman.manusync.PasserSingleton;
 import edu.chapman.manusync.R;
+import edu.chapman.manusync.dto.CompletedLotDTO;
 import edu.chapman.manusync.dto.LotDTO;
 
 /**
@@ -23,6 +29,9 @@ public class TaktTimerActivity extends Activity {
     private LotDTO currentLot;
     private ProgressPieView taktTimer;
     private TextView partNumber, lotNumber, quantity;
+    private Timer timer;
+    private int numCompletedItems;
+    private long totalTime, currentItemTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +39,7 @@ public class TaktTimerActivity extends Activity {
         setContentView(R.layout.activity_takt_timer);
 
         currentLot = PasserSingleton.getInstance().getCurrentLot();
+        numCompletedItems = 1;
         initViews();
     }
 
@@ -41,32 +51,50 @@ public class TaktTimerActivity extends Activity {
 
         partNumber.setText(currentLot.getPartNumberString());
         lotNumber.setText(currentLot.getLotNumberString());
-        quantity.setText(currentLot.getQuantityString());
+        quantity.setText(numCompletedItems + " of " +  currentLot.getQuantityString());
+        taktTimer.setOnClickListener(new CompleteItemListener());
 
-        /* silly showcase example */
-        final Handler mHandler = new Handler();
-        new Thread(new Runnable() {
-
-            int mProgressStatus = 0;
-            public void run() {
-                while (mProgressStatus < 100) {
-                    mProgressStatus++;
-                    try {
-                        Thread.sleep(500);
-                    } catch( Exception e){
-
-                    }
-                    // Update the progress bar
-                    mHandler.post(new Runnable() {
-                        public void run() {
-                            taktTimer.setProgress(mProgressStatus);
-                            taktTimer.setText(mProgressStatus + "%");
-                        }
-                    });
-                }
-            }
-        }).start();
-
+        startTimer();
     }
 
+    private void startTimer() {
+        final Handler handler = new Handler();
+        timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+
+                //TODO: set progress depending on maximum time allowed.
+                TaktTimerActivity.this.currentItemTime += 100;
+                handler.post(new Runnable() {
+                    public void run() {
+                        taktTimer.setText(Double.toString(TaktTimerActivity.this.currentItemTime / 1000.0));
+                    }
+                });
+            }
+        }, 1, 100);
+    }
+
+    /* Added as an inner class because it will need to touch TaktTimer variables. */
+    public class CompleteItemListener implements View.OnClickListener {
+
+        @Override
+        public void onClick(View v) {
+            totalTime += currentItemTime;
+
+            /* we have finished our current lot, now we will stop the timer and log the data */
+            if( numCompletedItems == currentLot.getQuantity()) {
+                timer.cancel();
+                timer.purge();
+                //TODO: log this data in a database.
+                CompletedLotDTO completedLot = new CompletedLotDTO(currentLot.getProductionLineNumber(),
+                        currentLot.getWorkstationNumber(), currentLot.getPartNumber(),
+                        currentLot.getLotNumber(), currentLot.getQuantity(), totalTime);
+                taktTimer.setText("Total Time: " + completedLot.getTotalTime() + "s"
+                        + "\nAverage Time: " + completedLot.getAverageTime() + "s");
+            } else {
+                quantity.setText( (++numCompletedItems) + " of " + currentLot.getQuantity() );
+            }
+        }
+    }
 }

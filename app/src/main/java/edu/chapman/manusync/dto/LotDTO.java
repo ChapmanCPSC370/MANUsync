@@ -7,7 +7,7 @@ package edu.chapman.manusync.dto;
  */
 public class LotDTO {
 
-    private int productionLineNumber, workstationNumber, partNumber, lotNumber, quantity;
+    protected int productionLineNumber, workstationNumber, partNumber, lotNumber, quantity;
 
     public LotDTO(int productionLineNumber, int workstationNumber,
                   int partNumber, int lotNumber, int quantity){

@@ -67,4 +67,30 @@
         app:ppvBackgroundColor="@color/color_peter_river"
         app:ppvProgressColor="@color/color_concrete"/>
 
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <at.markushi.ui.CircleButton
+            android:id="@+id/takt_pause_btn"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/pause"
+            app:cb_color="@color/color_peter_river"
+            app:cb_pressedRingWidth="8dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"/>
+
+        <at.markushi.ui.CircleButton
+            android:id="@+id/takt_menu_btn"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/menu"
+            app:cb_color="@color/color_peter_river"
+            app:cb_pressedRingWidth="8dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"/>
+
+    </RelativeLayout>
 </LinearLayout>
