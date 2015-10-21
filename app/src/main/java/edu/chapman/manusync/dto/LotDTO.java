@@ -29,4 +29,16 @@ public class LotDTO {
     public int getLotNumber() { return this.lotNumber; }
     public void setQuantity(int quantity) { this.quantity = quantity; }
     public int getQuantity() { return this.quantity; }
+
+    /* Acessors and mutators for string data */
+    public void setProductionLineNumber(String productionLineNumber) { this.productionLineNumber = Integer.parseInt(productionLineNumber); }
+    public String getProductionLineNumberString() { return Integer.toString(this.productionLineNumber); }
+    public void setWorkstationNumber(String workstationNumber) { this.workstationNumber = Integer.parseInt(workstationNumber); }
+    public String getWorkstationNumberString() { return Integer.toString(this.workstationNumber); }
+    public void setPartNumber(String partNumber) { this.partNumber = Integer.parseInt(partNumber); }
+    public String getPartNumberString() { return Integer.toString(this.partNumber); }
+    public void setLotNumber(String lotNumber) { this.lotNumber = Integer.parseInt(lotNumber); }
+    public String getLotNumberString() { return Integer.toString(this.lotNumber); }
+    public void setQuantity(String quantity) { this.quantity = Integer.parseInt(quantity); }
+    public String getQuantityString() { return Integer.toString(this.quantity); }
 }

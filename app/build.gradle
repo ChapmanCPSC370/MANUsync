@@ -31,4 +31,6 @@ dependencies {
     compile 'com.wrapp.floatlabelededittext:library:0.0.6'
     //flat button - UI
     compile 'info.hoang8f:fbutton:1.0.5'
+    //circular progress wheel - UI
+    compile 'com.github.filippudak.progresspieview:library:1.0.+'
 }

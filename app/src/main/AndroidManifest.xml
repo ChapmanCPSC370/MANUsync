@@ -9,15 +9,17 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme" >
-        <activity android:name=".LogInActivity" >
+        <activity android:name=".activity.LogInActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainMenuActivity" />
-        <activity android:name=".NewLotActivity" />
+        <activity android:name=".activity.MainMenuActivity" />
+        <activity android:name=".activity.NewLotActivity" />
+        <activity android:name=".activity.VerifyNewLotActivity" />
+        <activity android:name=".activity.TaktTimerActivity" android:screenOrientation="portrait" />
     </application>
 
 </manifest>

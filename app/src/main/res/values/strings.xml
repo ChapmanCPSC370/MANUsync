@@ -4,6 +4,14 @@
     <string name="username_text">username</string>
     <string name="password_text">password</string>
     <string name="bad_lot_error">There was an error!</string>
+    <string name="verify_new_lot_text">Verify New Lot</string>
+    <string name="production_line_text">Production Line</string>
+    <string name="workstation_number_text">Workstation Number</string>
+    <string name="part_number_text">Part Number</string>
+    <string name="lot_number_text">Lot Number</string>
+    <string name="quantity_text">Quantity</string>
+    <string name="start_lot_text">Start Lot</string>
+    <string name="cancel_lot_text">Cancel Lot</string>
 
     <!-- arrays used for main menu items -->
     <string-array name="menu_items">
