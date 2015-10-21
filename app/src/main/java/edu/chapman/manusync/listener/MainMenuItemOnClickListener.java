@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.util.Log;
 import android.view.View;
 
-import edu.chapman.manusync.NewLotActivity;
+import edu.chapman.manusync.activity.NewLotActivity;
 import edu.chapman.manusync.R;
 import edu.chapman.manusync.dto.MainMenuItemDTO;
 

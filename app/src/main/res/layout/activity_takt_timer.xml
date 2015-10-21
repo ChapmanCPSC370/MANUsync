@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/general_padding">
+
+    <!-- Lot information -->
+    <TextView
+        android:id="@+id/takt_part_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:paddingLeft="@dimen/medium_padding_dp"
+        android:paddingStart="@dimen/medium_padding_dp"
+        android:paddingBottom="@dimen/small_padding_dp"
+        android:textSize="@dimen/verify_new_lot_big_text_size"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/part_number_text"
+        android:paddingBottom="@dimen/medium_padding_dp"
+        android:textSize="@dimen/verify_new_lot_label_text_size" />
+    <TextView
+        android:id="@+id/takt_lot_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:paddingLeft="@dimen/medium_padding_dp"
+        android:paddingStart="@dimen/medium_padding_dp"
+        android:paddingBottom="@dimen/small_padding_dp"
+        android:textSize="@dimen/verify_new_lot_big_text_size"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/lot_number_text"
+        android:paddingBottom="@dimen/medium_padding_dp"
+        android:textSize="@dimen/verify_new_lot_label_text_size" />
+    <TextView
+        android:id="@+id/takt_lot_quantity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:paddingLeft="@dimen/medium_padding_dp"
+        android:paddingStart="@dimen/medium_padding_dp"
+        android:paddingBottom="@dimen/small_padding_dp"
+        android:textSize="@dimen/verify_new_lot_big_text_size"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/quantity_text"
+        android:paddingBottom="@dimen/medium_padding_dp"
+        android:textSize="@dimen/verify_new_lot_label_text_size" />
+
+    <!-- takt timer -->
+
+    <com.filippudak.ProgressPieView.ProgressPieView
+        android:layout_margin="8dp"
+        android:layout_gravity="center"
+        android:id="@+id/takt_progress_timer"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:textSize="18sp"
+        android:text="Xml"
+        app:ppvStrokeWidth="6dp"
+        app:ppvBackgroundColor="@color/color_peter_river"
+        app:ppvProgressColor="@color/color_concrete"/>
+
+</LinearLayout>

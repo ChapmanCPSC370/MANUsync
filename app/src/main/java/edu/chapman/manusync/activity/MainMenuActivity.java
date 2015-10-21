@@ -1,4 +1,4 @@
-package edu.chapman.manusync;
+package edu.chapman.manusync.activity;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -6,6 +6,8 @@ import android.widget.GridView;
 
 import javax.inject.Inject;
 
+import edu.chapman.manusync.MANUComponent;
+import edu.chapman.manusync.R;
 import edu.chapman.manusync.adapter.MainMenuViewAdapter;
 
 /**

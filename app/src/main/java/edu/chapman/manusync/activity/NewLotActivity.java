@@ -1,8 +1,9 @@
-package edu.chapman.manusync;
+package edu.chapman.manusync.activity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
@@ -13,6 +14,9 @@ import android.widget.Spinner;
 
 import javax.inject.Inject;
 
+import edu.chapman.manusync.MANUComponent;
+import edu.chapman.manusync.PasserSingleton;
+import edu.chapman.manusync.R;
 import edu.chapman.manusync.dto.LotDTO;
 import edu.chapman.manusync.provider.NewLotDataProvider;
 
@@ -69,12 +73,16 @@ public class NewLotActivity extends Activity {
             @Override
             public void onClick(View v) {
                 if(verifyData(v)) {
-                    //go to new activity.
                     LotDTO lot = new LotDTO(Integer.parseInt(productionLineNumbers.getSelectedItem().toString()),
                             Integer.parseInt(workstationNumbers.getSelectedItem().toString()),
                             Integer.parseInt(partNumbers.getSelectedItem().toString()),
                             Integer.parseInt(lotNumber.getText().toString()),
                             Integer.parseInt(quantity.getText().toString()));
+
+                    PasserSingleton passer = PasserSingleton.getInstance();
+                    passer.setCurrentLot(lot);
+                    Intent intent = new Intent(NewLotActivity.this, VerifyNewLotActivity.class);
+                    startActivity(intent);
                 }
             }
 
