@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:textColor="@color/color_peter_river"
         android:textAlignment="center"
-        android:text="Verify New Lot"
+        android:text="@string/verify_new_lot_text"
         android:paddingBottom="@dimen/small_padding_dp"
         android:textSize="55sp" />
 
@@ -22,12 +22,13 @@
         android:layout_height="wrap_content"
         android:textStyle="bold"
         android:paddingLeft="@dimen/medium_padding_dp"
+        android:paddingStart="@dimen/medium_padding_dp"
         android:paddingBottom="@dimen/small_padding_dp"
         android:textSize="@dimen/verify_new_lot_big_text_size"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Production Line"
+        android:text="@string/production_line_text"
         android:paddingBottom="@dimen/small_padding_dp"
         android:textSize="@dimen/verify_new_lot_label_text_size" />
 
@@ -38,12 +39,13 @@
         android:layout_height="wrap_content"
         android:textStyle="bold"
         android:paddingLeft="@dimen/medium_padding_dp"
+        android:paddingStart="@dimen/medium_padding_dp"
         android:paddingBottom="@dimen/small_padding_dp"
         android:textSize="@dimen/verify_new_lot_big_text_size"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Workstation Number"
+        android:text="@string/workstation_number_text"
         android:paddingBottom="@dimen/small_padding_dp"
         android:textSize="@dimen/verify_new_lot_label_text_size" />
 
@@ -54,12 +56,13 @@
         android:layout_height="wrap_content"
         android:textStyle="bold"
         android:paddingLeft="@dimen/medium_padding_dp"
+        android:paddingStart="@dimen/medium_padding_dp"
         android:paddingBottom="@dimen/small_padding_dp"
         android:textSize="@dimen/verify_new_lot_big_text_size"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Part Number"
+        android:text="@string/part_number_text"
         android:paddingBottom="@dimen/small_padding_dp"
         android:textSize="@dimen/verify_new_lot_label_text_size" />
 
@@ -70,12 +73,13 @@
         android:layout_height="wrap_content"
         android:textStyle="bold"
         android:paddingLeft="@dimen/medium_padding_dp"
+        android:paddingStart="@dimen/medium_padding_dp"
         android:paddingBottom="@dimen/small_padding_dp"
         android:textSize="@dimen/verify_new_lot_big_text_size"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Lot Number"
+        android:text="@string/lot_number_text"
         android:paddingBottom="@dimen/small_padding_dp"
         android:textSize="@dimen/verify_new_lot_label_text_size" />
 
@@ -86,12 +90,13 @@
         android:layout_height="wrap_content"
         android:textStyle="bold"
         android:paddingLeft="@dimen/medium_padding_dp"
+        android:paddingStart="@dimen/medium_padding_dp"
         android:paddingBottom="@dimen/small_padding_dp"
         android:textSize="@dimen/verify_new_lot_big_text_size"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Quantity"
+        android:text="@string/quantity_text"
         android:paddingBottom="@dimen/medium_padding_dp"
         android:textSize="@dimen/verify_new_lot_label_text_size" />
     <LinearLayout
@@ -108,7 +113,8 @@
             app:cornerRadius="@dimen/fbtn_corner_radius"
             android:layout_weight="45"
             android:layout_marginRight="@dimen/small_padding_dp"
-            android:text="Start Lot" />
+            android:layout_marginEnd="@dimen/small_padding_dp"
+            android:text="@string/start_lot_text" />
         <info.hoang8f.widget.FButton
             android:id="@+id/cancel_new_lot"
             android:layout_width="match_parent"
@@ -120,7 +126,8 @@
             app:shadowHeight="@dimen/fbtn_shadow_height"
             app:cornerRadius="@dimen/fbtn_corner_radius"
             android:layout_marginLeft="@dimen/small_padding_dp"
-            android:text="Cancel Lot" />
+            android:layout_marginStart="@dimen/small_padding_dp"
+            android:text="@string/cancel_lot_text" />
     </LinearLayout>
 
 </LinearLayout>
