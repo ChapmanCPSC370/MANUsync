@@ -57,8 +57,10 @@ public class UserDAO {
         values.put(MANUContract.Users.COL_CREATION_DATE, creationDate);
 
         long returnCode = database.insert(MANUContract.Users.TABLE_NAME, null, values);
+
+        close();
+
         if(returnCode == -1) {
-            close();
             throw new Exception("There was an issue inserting into the database.");
         }
 
@@ -79,15 +81,19 @@ public class UserDAO {
         };
 
         Cursor cursor = database.query(MANUContract.Users.TABLE_NAME, tableColumns, whereClause, whereArgs, null, null, null);
-        if(cursor.moveToFirst())
-            return new UserDTO(cursor.getInt(cursor.getColumnIndex(MANUContract.Users._ID)),
+        if(cursor.moveToFirst()) {
+            UserDTO loggedInUser = new UserDTO(cursor.getInt(cursor.getColumnIndex(MANUContract.Users._ID)),
                     cursor.getString(cursor.getColumnIndex(MANUContract.Users.COL_USERNAME)),
                     cursor.getString(cursor.getColumnIndex(MANUContract.Users.COL_PASSWORD)),
                     cursor.getString(cursor.getColumnIndex(MANUContract.Users.COL_FIRST_NAME)),
                     cursor.getString(cursor.getColumnIndex(MANUContract.Users.COL_LAST_NAME)),
                     cursor.getInt(cursor.getColumnIndex(MANUContract.Users.COL_PRODUCTION_LINE_ID)),
                     cursor.getString(cursor.getColumnIndex(MANUContract.Users.COL_CREATION_DATE)));
-        else {
+            cursor.close();
+            close();
+            return loggedInUser;
+        } else {
+            cursor.close();
             close();
             throw new Exception("Incorrect username or password.");
         }

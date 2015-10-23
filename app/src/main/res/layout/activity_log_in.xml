@@ -7,17 +7,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="@dimen/general_padding">
-    <info.hoang8f.widget.FButton
+
+    <com.dd.processbutton.iml.ActionProcessButton
         android:id="@+id/login_btn"
         android:layout_width="@dimen/log_in_view_width"
         android:layout_height="wrap_content"
-        app:buttonColor="@color/color_peter_river"
-        app:shadowColor="@color/color_belize_hole"
-        app:shadowEnabled="true"
-        app:shadowHeight="@dimen/fbtn_shadow_height"
-        app:cornerRadius="@dimen/fbtn_corner_radius"
+        android:layout_marginBottom="16dp"
         android:text="@string/log_in_text"
-        android:layout_centerInParent="true" />
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:layout_centerInParent="true"
+        app:pb_colorComplete="@color/green_complete"
+        app:pb_colorNormal="@color/color_peter_river"
+        app:pb_colorPressed="@color/color_belize_hole"
+        app:pb_colorProgress="@color/purple_progress"
+        app:pb_textComplete="Success"
+        app:pb_textProgress="Loading..."
+        app:pb_textError="Error"
+        app:pb_colorError="@color/red_error" />
     <com.wrapp.floatlabelededittext.FloatLabeledEditText
         android:id="@+id/password_et_holder"
         android:layout_width="wrap_content"

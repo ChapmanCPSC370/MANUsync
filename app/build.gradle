@@ -35,4 +35,6 @@ dependencies {
     compile 'com.github.filippudak.progresspieview:library:1.0.+'
     //floating action button - UI
     compile 'com.github.markushi:circlebutton:1.1'
+    //loading button
+    compile 'com.github.dmytrodanylyk.android-process-button:library:1.0.4'
 }
