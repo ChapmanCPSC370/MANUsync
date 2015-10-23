@@ -3,6 +3,7 @@ package edu.chapman.manusync;
 import javax.inject.Singleton;
 
 import dagger.Component;
+import edu.chapman.manusync.activity.AddUserActivity;
 import edu.chapman.manusync.activity.LogInActivity;
 import edu.chapman.manusync.activity.MainMenuActivity;
 import edu.chapman.manusync.activity.NewLotActivity;
@@ -17,6 +18,7 @@ public interface MANUComponent {
     void inject(LogInActivity logInActivity);
     void inject(MainMenuActivity mainMenuActivity);
     void inject(NewLotActivity newLotActivity);
+    void inject(AddUserActivity addUserActivity);
 
     final class Instance {
         private static MANUComponent component;

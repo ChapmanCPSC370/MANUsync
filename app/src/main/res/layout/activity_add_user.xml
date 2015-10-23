@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingTop="@dimen/general_padding"
+    android:paddingBottom="@dimen/general_padding"
+    android:paddingRight="100dp"
+    android:paddingLeft="100dp">
+
+    <TextView
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:textColor="@color/color_peter_river"
+        android:textAlignment="center"
+        android:text="@string/create_user_text"
+        android:paddingBottom="@dimen/small_padding_dp"
+        android:textSize="55sp" />
+
+    <com.wrapp.floatlabelededittext.FloatLabeledEditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:fletPadding="@dimen/float_edit_text_padding">
+        <EditText
+            android:id="@+id/add_user_username_et"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/username_text"
+            android:inputType="text" />
+    </com.wrapp.floatlabelededittext.FloatLabeledEditText>
+
+    <com.wrapp.floatlabelededittext.FloatLabeledEditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:fletPadding="@dimen/float_edit_text_padding">
+        <EditText
+            android:id="@+id/add_user_password_et"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/password_text"
+            android:inputType="textPassword" />
+    </com.wrapp.floatlabelededittext.FloatLabeledEditText>
+
+    <com.wrapp.floatlabelededittext.FloatLabeledEditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:fletPadding="@dimen/float_edit_text_padding">
+        <EditText
+            android:id="@+id/add_user_firstname_et"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/first_name_text"
+            android:inputType="text" />
+    </com.wrapp.floatlabelededittext.FloatLabeledEditText>
+    <com.wrapp.floatlabelededittext.FloatLabeledEditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:fletPadding="@dimen/float_edit_text_padding">
+        <EditText
+            android:id="@+id/add_user_lastname_et"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/last_name_text"
+            android:inputType="text" />
+    </com.wrapp.floatlabelededittext.FloatLabeledEditText>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+        <Spinner
+            android:id="@+id/add_user_production_line_spnr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"/>
+    </LinearLayout>
+    <com.dd.processbutton.iml.ActionProcessButton
+        android:id="@+id/add_user_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:text="@string/create_account_text"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        app:pb_colorComplete="@color/green_complete"
+        app:pb_colorNormal="@color/color_peter_river"
+        app:pb_colorPressed="@color/color_belize_hole"
+        app:pb_colorProgress="@color/purple_progress"
+        app:pb_textComplete="Success"
+        app:pb_textProgress="Loading..."
+        app:pb_textError="Error"
+        app:pb_colorError="@color/red_error" />
+</LinearLayout>
