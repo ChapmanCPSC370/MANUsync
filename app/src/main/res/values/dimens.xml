@@ -11,4 +11,5 @@
     <dimen name="verify_new_lot_label_text_size">25sp</dimen>
     <dimen name="small_padding_dp">10dp</dimen>
     <dimen name="medium_padding_dp">20dp</dimen>
+    <dimen name="new_lot_text_view_padding">30dp</dimen>
 </resources>

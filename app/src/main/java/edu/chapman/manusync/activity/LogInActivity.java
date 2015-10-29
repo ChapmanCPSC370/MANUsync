@@ -3,28 +3,20 @@ package edu.chapman.manusync.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 
 import com.dd.processbutton.iml.ActionProcessButton;
-
-import java.io.UnsupportedEncodingException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 
 import javax.inject.Inject;
 
 import edu.chapman.manusync.Hasher;
 import edu.chapman.manusync.MANUComponent;
+import edu.chapman.manusync.PasserSingleton;
 import edu.chapman.manusync.R;
 import edu.chapman.manusync.dao.UserDAO;
-import edu.chapman.manusync.db.DatabaseHelper;
 import edu.chapman.manusync.dto.UserDTO;
 import edu.chapman.manusync.listener.EditProgressButtonListener;
 
@@ -46,6 +38,17 @@ public class LogInActivity extends AppCompatActivity {
 
         MANUComponent.Instance.get().inject(this);
 
+        //TODO: Please use this on the first run to fill the database with dummy data.
+        //tmpDBCreator tmp = new tmpDBCreator(userDAO);
+        //tmp.initPhoneyTables();
+
+        /* used to pre-fill EditTexts with a dummy user account for faster logging in */
+        setForTesting();
+    }
+
+    private void setForTesting() {
+        username.setText("niccorder0");
+        password.setText("Password1");
     }
 
     /* Initialzing views, and attaching appropriate listeners */
@@ -63,7 +66,7 @@ public class LogInActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 logIn.setProgress(1);
-                UserDTO user = null;
+                UserDTO user;
                 try {
                     user = new UserDTO(username.getText().toString(),
                             Hasher.SHA1(password.getText().toString()));
@@ -74,6 +77,7 @@ public class LogInActivity extends AppCompatActivity {
                 if (user == null) {
                     logIn.setProgress(-1);
                 } else {
+                    PasserSingleton.getInstance().setCurrentUser(user);
                     Intent intent = new Intent(LogInActivity.this, MainMenuActivity.class);
                     startActivity(intent);
                 }

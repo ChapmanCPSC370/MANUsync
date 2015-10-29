@@ -17,6 +17,7 @@
     <string name="last_name_text">Last Name</string>
     <string name="create_account_text">Create Account</string>
     <string name="create_user_text">Create User</string>
+    <string name="create_new_lot_text">Create New Lot</string>
 
     <!-- arrays used for main menu items -->
     <string-array name="menu_items">

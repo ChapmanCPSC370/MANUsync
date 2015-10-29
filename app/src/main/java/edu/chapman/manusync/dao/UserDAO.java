@@ -4,9 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteStatement;
 
-import java.sql.SQLDataException;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -19,11 +17,16 @@ import edu.chapman.manusync.dto.UserDTO;
 
 /**
  * Created by niccorder - corde116@mail.chapman.edu on 10/22/15.
+ *
+ *  A DAO class that is used for communicating to the User table in the local SQLite database.
+ *  You would use this class if you are trying to preform inserts/updates/queries pertaining to
+ *  a user.
  */
 public class UserDAO {
 
     private DatabaseHelper helper;
-    private SQLiteDatabase database;
+    /* temporary public until all DAO classes are created */
+    public SQLiteDatabase database;
     private Context context;
 
     @Inject
@@ -40,7 +43,14 @@ public class UserDAO {
         helper.close();
     }
 
-    /* will assume that all data is verified beforehand */
+    /**
+     * Creates a user account and requires that the DTO have specific information.
+     *
+     * @param userDTO must contain username, password, first/last name and production line ID
+     * @return returns a filled UserDTO object if creation was sucessful.
+     * @throws SQLException
+     * @throws Exception
+     */
     public UserDTO createUser(UserDTO userDTO) throws SQLException, Exception {
         open();
         ContentValues values = new ContentValues();
@@ -69,7 +79,16 @@ public class UserDAO {
                 creationDate);
     }
 
-    /* assumes necessary information was checked beforehand */
+    /**
+     * A standard method which will test the inputed information against a database to verify
+     * the user is logged in. Currently throws an exception if there is an issue with logging in.
+     *
+     * TODO: Change return type based on error code (null if incorrect user/pass), exception if genuine error.
+     *
+     * @param userDTO requires username and SHA1 encrypted password.
+     * @return returns a filled UserDTO object with user information.
+     * @throws Exception
+     */
     public UserDTO logInUser(UserDTO userDTO) throws Exception {
         open();
         String[] tableColumns = new String[] { "*" };
