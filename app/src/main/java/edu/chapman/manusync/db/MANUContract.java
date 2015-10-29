@@ -93,7 +93,7 @@ public class MANUContract {
         public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + " ("
                 + _ID + " INTEGER PRIMARY KEY,"
                 + COL_PART_ID + " TEXT NOT NULL,"
-                + COL_TAKT_TIME + " INTEGER,"
+                + COL_TAKT_TIME + " REAL,"
                 + COL_PRODUCTION_LINE_ID + " INTEGER,"
                 + "FOREIGN KEY(" + COL_PRODUCTION_LINE_ID + ") REFERENCES " + ProductionLine.TABLE_NAME + "(" + ProductionLine._ID + ")"
                 + ");";

@@ -24,6 +24,14 @@ public class Hasher {
         return buf.toString();
     }
 
+    /**
+     * A standard SHA1 encryption algorithm used for encryption of sensitive data on spot.
+     *
+     * @param text a non null string
+     * @return returns a SHA1 encoded String
+     * @throws NoSuchAlgorithmException
+     * @throws UnsupportedEncodingException
+     */
     public static String SHA1(String text) throws NoSuchAlgorithmException, UnsupportedEncodingException {
         MessageDigest md = MessageDigest.getInstance("SHA-1");
         md.update(text.getBytes("iso-8859-1"), 0, text.length());
