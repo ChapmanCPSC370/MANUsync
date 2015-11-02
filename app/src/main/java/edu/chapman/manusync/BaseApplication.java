@@ -8,6 +8,9 @@ import android.app.Application;
 public class BaseApplication extends Application {
 
 
+    /*
+     * Starts Dagger-2's dependency injection on application start.
+     */
     @Override
     public void onCreate() {
         super.onCreate();
