@@ -26,6 +26,22 @@ public class LogInActivity extends AppCompatActivity {
     private EditText username, password;
     private ActionProcessButton logIn;
 
+    /*
+     * In the line below, we tell dagger two that this object is a dependency that we would like it to
+     * inject for us. This means that we don't have to actually build our object ourself. Not only does this
+     * save us time when we are coding, but this also saves us time if we were to change any parameters needed
+     * to build these objects. For example, lets build out UserDAO object right here without dependency injection.
+     *
+     *  UserDAO userDAO = new UserDAO(this, new DatabaseHelper(this));
+     *
+     * Long story short, dagger does that for us. Makes our lives easier ( especially if you have an object
+     * that recursively uses more dependencies... for example new BufferedReader(new FileReader(new InputStreamReader(...)));
+     * As a coder you want to avoid this, because if we change the constructor to add/delete dependencies we need to manually
+     * make these fixes. It gets even worse if you change DatabaseHelper's constructor, or a constructor DatabaseHelper depends
+     * on! As you can see it can really get messy, really fast. Dagger two abstracts this away from us, and makes our lives
+     * much easier by doing this for us. Even if we make a change to the constructor of UserDAO we dont need to change dagger two
+     * ...( unless we add a dependency, then we need to add one more providers method!)
+     */
     @Inject
     /* package private */ UserDAO userDAO;
 
@@ -36,6 +52,10 @@ public class LogInActivity extends AppCompatActivity {
 
         initViews();
 
+        /*
+         * This method tells dagger two to inject any dependencies in this activity, as explained in the
+         * MANUComponent interface. This basically runs Dagger-2 for this activity.
+         */
         MANUComponent.Instance.get().inject(this);
 
         //TODO: Please use this on the first run to fill the database with dummy data.
