@@ -142,11 +142,12 @@ public class AddUserActivity extends Activity {
             try {
                 user.signUp();
             } catch (ParseException e) {
+                e.printStackTrace();
                 error = e;
             }
 
             UserDTO newUser = null;
-            if (error != null) {
+            if (error == null) {
                 try {
                     //TODO: get the spinner to display available production lines.
                     newUser = new UserDTO(username,
@@ -154,9 +155,8 @@ public class AddUserActivity extends Activity {
                             firstName,
                             lastName,
                             r.nextInt(10) + 1);
-                    newUser = userHelper.createUser(newUser);
+                    userHelper.createUser(newUser);
                 } catch (Exception e) {
-                    newUser = null;
                     e.printStackTrace();
                 }
             }

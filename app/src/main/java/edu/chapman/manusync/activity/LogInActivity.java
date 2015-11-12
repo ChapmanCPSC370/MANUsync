@@ -105,9 +105,11 @@ public class LogInActivity extends AppCompatActivity {
                 if (user == null) {
                     logIn.setProgress(-1);
                 } else {
+                    logIn.setProgress(0);
                     PasserSingleton.getInstance().setCurrentUser(user);
-                    Intent intent = new Intent(LogInActivity.this, MainMenuActivity.class);
+                    Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
                     startActivity(intent);
+                    finish();
                 }
             }
         });
