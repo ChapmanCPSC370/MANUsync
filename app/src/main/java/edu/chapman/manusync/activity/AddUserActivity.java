@@ -1,13 +1,22 @@
 package edu.chapman.manusync.activity;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.dd.processbutton.iml.ActionProcessButton;
+import com.parse.ParseException;
+import com.parse.ParseUser;
+import com.parse.SignUpCallback;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Random;
 
 import javax.inject.Inject;
@@ -21,16 +30,10 @@ import edu.chapman.manusync.listener.EditProgressButtonListener;
 
 /**
  * Created by niccorder - corde116@mail.chapman.edu on 10/23/15.
- * <p/>
+ * <p>
  * An activity which adds a new user to the database.
  */
 public class AddUserActivity extends Activity {
-
-    //username can be any combination of upper, lowercase, and number must be between 3-16 characters
-    public static String USERNAME_REGEX = "^[A-Za-z0-9]{3,16}";
-
-    //password must contain one uppercase, one lowercase, and must be between 6-20 characters in length
-    public static String PASSWORD_REGEX = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(\\d|\\w){6,20})";
 
     @Inject
     /* package private */ UserDAO userHelper;
@@ -38,6 +41,7 @@ public class AddUserActivity extends Activity {
     private EditText username, password, firstName, lastName;
     private Spinner productionLine;
     private ActionProcessButton createUser;
+    private CreateUserTask createUserTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,21 +67,86 @@ public class AddUserActivity extends Activity {
         password.addTextChangedListener(new EditProgressButtonListener(createUser, password, this));
     }
 
+    @Override
+    protected void onDestroy() {
+        createUserTask.cancel(true);
+        super.onDestroy();
+    }
+
     private class CreateUserOnClickListener implements View.OnClickListener {
 
         @Override
         public void onClick(View v) {
-            /* set log in button to 'loading' process' */
+            createUserTask = new CreateUserTask();
+            createUserTask.execute();
+        }
+    }
+
+    private class CreateUserTask extends AsyncTask<Void, Integer, ParseException> {
+
+        private String username, password, firstName, lastName;
+
+        @Override
+        protected void onPreExecute() {
             AddUserActivity.this.createUser.setProgress(1);
 
-            String username = AddUserActivity.this.username.getText().toString();
-            String password = AddUserActivity.this.password.getText().toString();
-            String firstName = AddUserActivity.this.firstName.getText().toString();
-            String lastName = AddUserActivity.this.lastName.getText().toString();
+            username = AddUserActivity.this.username.getText().toString();
+            password = AddUserActivity.this.password.getText().toString();
+            firstName = AddUserActivity.this.firstName.getText().toString();
+            lastName = AddUserActivity.this.lastName.getText().toString();
+        }
 
+        @Override
+        protected void onPostExecute(ParseException e) {
+            if (!isCancelled()) {
+                if (e == null)
+                    AddUserActivity.this.finish();
+                else {
+                    AddUserActivity.this.createUser.setProgress(-1);
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(AddUserActivity.this);
+                    builder.setTitle("Something went wrong!");
+                    String errorMessage = "";
+                    switch (e.getCode()) {
+                        case ParseException.USERNAME_MISSING:
+                            errorMessage = "You did not enter a username!";
+                            break;
+                        case ParseException.PASSWORD_MISSING:
+                            errorMessage = "You did not enter a password!";
+                            break;
+                        case ParseException.USERNAME_TAKEN:
+                            errorMessage = "That username is already taken.";
+                            break;
+                        default:
+                            errorMessage = "Please make sure you have internet connectivity.";
+                            break;
+                    }
+                    builder.setMessage(errorMessage)
+                            .show();
+                }
+            }
+        }
+
+        @Override
+        protected ParseException doInBackground(Void... params) {
+
+            ParseUser user = new ParseUser();
+            user.setUsername(username);
+            user.setPassword(password);
+            user.put("FirstName", firstName);
+            user.put("LastName", lastName);
             Random r = new Random();
-            if (verifyUsername(username) && verifyPassword(password)) {
-                UserDTO newUser = null;
+            user.put("ProductionLineId", r.nextInt(10) + 1);
+
+            ParseException error = null;
+            try {
+                user.signUp();
+            } catch (ParseException e) {
+                error = e;
+            }
+
+            UserDTO newUser = null;
+            if (error != null) {
                 try {
                     //TODO: get the spinner to display available production lines.
                     newUser = new UserDTO(username,
@@ -90,31 +159,8 @@ public class AddUserActivity extends Activity {
                     newUser = null;
                     e.printStackTrace();
                 }
-
-                if (newUser == null)
-                    AddUserActivity.this.createUser.setProgress(-1);
-                else
-                    AddUserActivity.this.finish();
-            } else
-                AddUserActivity.this.createUser.setProgress(-1);
-        }
-
-        private boolean verifyUsername(String username) {
-            if (!username.matches(AddUserActivity.USERNAME_REGEX)) {
-                AddUserActivity.this.username.setTextColor(getResources().getColor(R.color.color_alizarin));
-                return false;
             }
-            return true;
+            return error;
         }
-
-        private boolean verifyPassword(String password) {
-            //
-            if (!password.matches(AddUserActivity.PASSWORD_REGEX)) {
-                AddUserActivity.this.password.setTextColor(getResources().getColor(R.color.color_alizarin));
-                return false;
-            }
-            return true;
-        }
-
     }
 }
