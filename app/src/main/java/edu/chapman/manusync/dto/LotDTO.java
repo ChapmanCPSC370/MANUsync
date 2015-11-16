@@ -24,7 +24,7 @@ public class LotDTO {
     /* Accessors and mutators */
     public ProductionLineDTO getProductionLineNumber() { return this.productionLine; }
     public int getWorkstationNumber() { return this.workstationNumber; }
-    public PartDTO getPartNumber() { return this.part; }
+    public PartDTO getPart() { return this.part; }
     public String getLotNumber() { return this.lotNumber; }
     public int getQuantity() { return this.quantity; }
 

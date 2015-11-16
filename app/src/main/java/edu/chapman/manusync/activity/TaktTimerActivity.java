@@ -1,9 +1,12 @@
 package edu.chapman.manusync.activity;
 
 import android.app.Activity;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,9 +29,12 @@ import edu.chapman.manusync.dto.LotDTO;
 public class TaktTimerActivity extends Activity {
     private static String TAG = TaktTimerActivity.class.getSimpleName();
 
-    private LotDTO currentLot;
+    /* Views */
     private ProgressPieView taktTimer;
-    private TextView partNumber, lotNumber, quantity;
+    private TextView quantity;
+    private View pause, menu;
+
+    private LotDTO currentLot;
     private Timer timer;
     private int numCompletedItems;
     private long totalTime, currentItemTime;
@@ -40,31 +46,42 @@ public class TaktTimerActivity extends Activity {
 
         currentLot = PasserSingleton.getInstance().getCurrentLot();
         numCompletedItems = 1;
+
+        totalTime = (long)((currentLot.getPart().getTaktTime() * 1000.0) * currentLot.getQuantity());
+
         initViews();
     }
 
     private void initViews() {
-        partNumber = (TextView) findViewById(R.id.takt_part_number);
-        lotNumber = (TextView) findViewById(R.id.takt_lot_number);
+        TextView partNumber = (TextView) findViewById(R.id.takt_part_number);
+        TextView lotNumber = (TextView) findViewById(R.id.takt_lot_number);
         quantity = (TextView) findViewById(R.id.takt_lot_quantity);
         taktTimer = (ProgressPieView) findViewById(R.id.takt_progress_timer);
+        pause = findViewById(R.id.takt_pause_btn);
+        menu = findViewById(R.id.takt_menu_btn);
+
+        pause.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pauseTimer();
+            }
+        });
 
         partNumber.setText(currentLot.getPartNumberString());
         lotNumber.setText(currentLot.getLotNumber());
-        quantity.setText(numCompletedItems + " of " +  currentLot.getQuantityString());
-        taktTimer.setOnClickListener(new CompleteItemListener());
+        quantity.setText(numCompletedItems + " of " + currentLot.getQuantityString());
 
         startTimer();
     }
 
     private void startTimer() {
+        taktTimer.setOnClickListener(new CompleteItemListener());
         final Handler handler = new Handler();
         timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
 
-                //TODO: set progress depending on maximum time allowed.
                 TaktTimerActivity.this.currentItemTime += 100;
                 handler.post(new Runnable() {
                     public void run() {
@@ -73,6 +90,19 @@ public class TaktTimerActivity extends Activity {
                 });
             }
         }, 1, 100);
+    }
+
+    private void pauseTimer() {
+        timer.cancel();
+        taktTimer.setBackgroundColor(ContextCompat.getColor(this, R.color.color_belize_hole));
+        taktTimer.setText(getResources().getString(R.string.takt_pause_message));
+        taktTimer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                taktTimer.setBackgroundColor(ContextCompat.getColor(TaktTimerActivity.this, R.color.color_peter_river));
+                startTimer();
+            }
+        });
     }
 
     /* Added as an inner class because it will need to touch TaktTimer variables. */
