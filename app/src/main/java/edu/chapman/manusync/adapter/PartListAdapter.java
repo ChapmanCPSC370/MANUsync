@@ -10,18 +10,18 @@ import android.widget.TextView;
 import java.util.List;
 
 import edu.chapman.manusync.R;
-import edu.chapman.manusync.dto.ProductionLineDTO;
+import edu.chapman.manusync.dto.PartDTO;
 
 /**
- * Created by niccorder - corde116@mail.chapman.edu on 11/15/15.
+ * Created by niccorder - corde116@mail.chapman.edu on 11/16/15.
  */
-public class ProductionLineAdapter extends ArrayAdapter<ProductionLineDTO> {
+public class PartListAdapter extends ArrayAdapter<PartDTO> {
 
     private Context context;
     private int resource;
-    private List<ProductionLineDTO> objects;
+    private List<PartDTO> objects;
 
-    public ProductionLineAdapter(Context context, int resource, List<ProductionLineDTO> objects) {
+    public PartListAdapter(Context context, int resource, List<PartDTO> objects) {
         super(context, resource, objects);
         this.context = context;
         this.resource = resource;
@@ -36,11 +36,11 @@ public class ProductionLineAdapter extends ArrayAdapter<ProductionLineDTO> {
             view = inflater.inflate(resource, parent, false);
         }
 
-        ProductionLineDTO pl = objects.get(position);
+        PartDTO part = objects.get(position);
 
-        if(pl != null) {
+        if(part != null) {
             TextView textView = (TextView) view.findViewById(R.id.spinner_tv);
-            textView.setText(pl.getProductionLineId());
+            textView.setText(part.getPartNumber());
         }
 
         return view;
@@ -54,18 +54,18 @@ public class ProductionLineAdapter extends ArrayAdapter<ProductionLineDTO> {
             view = inflater.inflate(resource, parent, false);
         }
 
-        ProductionLineDTO pl = objects.get(position);
+        PartDTO part = objects.get(position);
 
-        if(pl != null) {
+        if(part != null) {
             TextView textView = (TextView) view.findViewById(R.id.spinner_tv);
-            textView.setText(pl.getProductionLineId());
+            textView.setText(part.getPartNumber());
         }
 
         return view;
     }
 
     @Override
-    public ProductionLineDTO getItem(int position) {
+    public PartDTO getItem(int position) {
         return objects.get(position);
     }
 }

@@ -15,6 +15,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import edu.chapman.manusync.PasserSingleton;
 import edu.chapman.manusync.db.DatabaseHelper;
 import edu.chapman.manusync.db.MANUContract;
 import edu.chapman.manusync.dto.ProductionLineDTO;
@@ -39,6 +40,8 @@ public class ProductionLineDAO {
         ParseQuery<ParseObject> query = new ParseQuery<>(MANUContract.ProductionLine.TABLE_NAME);
         query.orderByDescending(MANUContract.ProductionLine.COL_PRODUCTION_LINE_ID);
 
+        if(!PasserSingleton.getInstance().isConnected())
+            query.fromLocalDatastore();
         List<ParseObject> parseObjects = query.find();
         List<ProductionLineDTO> allProductionLines = new ArrayList<>();
         for(ParseObject productionLine : parseObjects) {
@@ -52,7 +55,9 @@ public class ProductionLineDAO {
     }
 
     public ProductionLineDTO getProductionLine(String parseId) throws ParseException {
-        ParseQuery<ParseObject> query = new ParseQuery<ParseObject>(MANUContract.ProductionLine.TABLE_NAME);
+        ParseQuery<ParseObject> query = new ParseQuery<>(MANUContract.ProductionLine.TABLE_NAME);
+        if(!PasserSingleton.getInstance().isConnected())
+            query.fromLocalDatastore();
         ParseObject productionLine = query.get(parseId);
         return new ProductionLineDTO(productionLine.getObjectId(),
                 productionLine.getString(MANUContract.ProductionLine.COL_PRODUCTION_LINE_ID),

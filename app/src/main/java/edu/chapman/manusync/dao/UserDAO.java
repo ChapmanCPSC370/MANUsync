@@ -11,6 +11,7 @@ import com.parse.ParseQuery;
 
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -40,12 +41,12 @@ public class UserDAO {
     }
 
     public UserDTO createUser(UserDTO userDTO) throws Exception {
-        ParseObject user = new ParseObject("User");
-        user.put("Username", userDTO.getUsername());
-        user.put("Password", userDTO.getPassword());
-        user.put("FirstName", userDTO.getFirstName());
-        user.put("LastName", userDTO.getLastName());
-        user.put("ProductionLineID", userDTO.getParseProductionLineId());
+        ParseObject user = new ParseObject(MANUContract.Users.TABLE_NAME);
+        user.put(MANUContract.Users.COL_USERNAME, userDTO.getUsername());
+        user.put(MANUContract.Users.COL_PASSWORD, userDTO.getPassword());
+        user.put(MANUContract.Users.COL_FIRST_NAME, userDTO.getFirstName());
+        user.put(MANUContract.Users.COL_LAST_NAME, userDTO.getLastName());
+        user.put(MANUContract.Users.COL_PRODUCTION_LINE_ID, userDTO.getParseProductionLineId());
         user.pinInBackground();
         user.saveEventually();
 
@@ -62,14 +63,14 @@ public class UserDAO {
      * @throws Exception
      */
     public UserDTO logInUser(UserDTO userDTO) throws Exception {
-        Log.d(TAG, "Loggin in user");
         ParseQuery<ParseObject> userQuery = ParseQuery.getQuery("User");
-        Log.d(TAG, userDTO.getUsername() + " " + userDTO.getPassword());
         userQuery.whereEqualTo("Username", userDTO.getUsername());
         userQuery.whereEqualTo("Password", userDTO.getPassword());
+
         if(!PasserSingleton.getInstance().isConnected())
             userQuery.fromLocalDatastore();
         List<ParseObject> foundUser = userQuery.find();
+
         if(foundUser.size() != 0){
             for(ParseObject user : foundUser){
                 /* necessary to get production line number */

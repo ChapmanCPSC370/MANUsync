@@ -10,6 +10,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -20,14 +21,14 @@ import com.parse.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
-
-import edu.chapman.manusync.MANUComponent;
 import edu.chapman.manusync.PasserSingleton;
 import edu.chapman.manusync.R;
+import edu.chapman.manusync.adapter.PartListAdapter;
+import edu.chapman.manusync.adapter.ProductionLineAdapter;
+import edu.chapman.manusync.dao.PartDAO;
 import edu.chapman.manusync.dao.ProductionLineDAO;
-import edu.chapman.manusync.db.MANUContract;
 import edu.chapman.manusync.dto.LotDTO;
+import edu.chapman.manusync.dto.PartDTO;
 import edu.chapman.manusync.dto.ProductionLineDTO;
 
 /**
@@ -36,18 +37,29 @@ import edu.chapman.manusync.dto.ProductionLineDTO;
 public class NewLotActivity extends Activity {
     private static final String TAG = NewLotActivity.class.getSimpleName();
 
-    private ArrayAdapter<String> productionLineAdapter, workstationNumberAdapter, partNumberAdapter;
-    private Spinner productionLineNumbers, workstationNumbers, partNumbers;
+    /* Necessary for views */
+    private Spinner productionLineNumbers, workstationNumbers, partNumberSpinner;
     private EditText lotNumber, quantity;
     private Button startLot;
-    private ProductionLineDAO provider;
+    private ProductionLineDAO productionLineProvider;
+    private PartDAO partProvider;
+    private ProductionLineAdapter productionLineAdapter;
+    private PartListAdapter partListAdapter;
+    private ArrayAdapter<String> workstationNumberAdapter;
+    private List<String> workstationNumberList;
+    private List<ProductionLineDTO> productionLineIds;
+    private List<PartDTO> partNumbers;
+
+    /* Necessary for submitting data */
+    private ProductionLineDTO selectedProductionLine;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_lot);
 
-        provider = new ProductionLineDAO();
+        productionLineProvider = new ProductionLineDAO();
+        partProvider = new PartDAO();
 
         new GetLotInfoTask().execute();
     }
@@ -59,10 +71,32 @@ public class NewLotActivity extends Activity {
         productionLineNumbers.setAdapter(productionLineAdapter);
         workstationNumbers = (Spinner) findViewById(R.id.workstation_number_spnr);
         workstationNumbers.setAdapter(workstationNumberAdapter);
-        partNumbers = (Spinner) findViewById(R.id.part_number_spnr);
-        partNumbers.setAdapter(partNumberAdapter);
+        partNumberSpinner = (Spinner) findViewById(R.id.part_number_spnr);
+        partNumberSpinner.setAdapter(partListAdapter);
 
-        //EditTexts - setting keyboard exclusively to numbers
+        /* updates visible workstation numbers depending on how many workstations are available to
+         * the production line.
+         */
+        productionLineNumbers.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                selectedProductionLine = productionLineAdapter.getItem(position);
+                workstationNumberList = new ArrayList<>();
+                for( int i = 1; i <= selectedProductionLine.getNumWorkstations(); ++i) {
+                    workstationNumberList.add(Integer.toString(i));
+                }
+                workstationNumberAdapter = new ArrayAdapter<>(NewLotActivity.this,
+                        R.layout.item_spinner, workstationNumberList);
+                workstationNumbers.setAdapter(workstationNumberAdapter);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                selectedProductionLine = null;
+            }
+        });
+
+        /* EditTexts - setting keyboard exclusively to numbers */
         lotNumber = (EditText) findViewById(R.id.lot_number_et);
         lotNumber.setRawInputType(Configuration.KEYBOARD_12KEY);
         quantity = (EditText) findViewById(R.id.quantity_et);
@@ -75,7 +109,7 @@ public class NewLotActivity extends Activity {
                 if(verifyData(v)) {
                     LotDTO lot = new LotDTO(Integer.parseInt(productionLineNumbers.getSelectedItem().toString()),
                             Integer.parseInt(workstationNumbers.getSelectedItem().toString()),
-                            Integer.parseInt(partNumbers.getSelectedItem().toString()),
+                            Integer.parseInt(partNumberSpinner.getSelectedItem().toString()),
                             Integer.parseInt(lotNumber.getText().toString()),
                             Integer.parseInt(quantity.getText().toString()));
 
@@ -126,7 +160,6 @@ public class NewLotActivity extends Activity {
     private class GetLotInfoTask extends AsyncTask<Void, Integer, Boolean> {
 
         private ProgressDialog progress;
-        private List<String> productionLineIds, workstationNumbers, partNumbers;
 
         @Override
         protected void onPreExecute() {
@@ -136,32 +169,30 @@ public class NewLotActivity extends Activity {
 
         @Override
         protected void onPostExecute(Boolean aBoolean) {
-            productionLineAdapter = new ArrayAdapter<>(NewLotActivity.this,
-                    R.layout.support_simple_spinner_dropdown_item,
-                    productionLineIds);
+            productionLineAdapter = new ProductionLineAdapter(NewLotActivity.this,
+                    R.layout.item_spinner, productionLineIds);
+            workstationNumberAdapter = new ArrayAdapter<>(NewLotActivity.this,
+                    R.layout.item_spinner, workstationNumberList);
+            partListAdapter = new PartListAdapter(NewLotActivity.this,
+                    R.layout.item_spinner, partNumbers);
             initViews();
             progress.dismiss();
-//            workstationNumberAdapter = new ArrayAdapter<>(this,
-//                    R.layout.support_simple_spinner_dropdown_item,
-//                    workstationNumbers);
-//            partNumberAdapter = new ArrayAdapter<>(this,
-//                    R.layout.support_simple_spinner_dropdown_item,
-//                    partNumbers);
         }
 
         @Override
         protected Boolean doInBackground(Void... params) {
             productionLineIds = new ArrayList<>();
-            workstationNumbers = new ArrayList<>();
+            workstationNumberList = new ArrayList<>();
             partNumbers = new ArrayList<>();
 
             try {
-                List<ProductionLineDTO> productionLines = provider.getAllProductionLines();
-                for(ProductionLineDTO pl : productionLines){
-                    productionLineIds.add(pl.getProductionLineId());
-                    workstationNumbers.add(Integer.toString(pl.getNumWorkstations()));
-                    partNumbers.add(pl.getProductCreated());
+                productionLineIds = productionLineProvider.getAllProductionLines();
+                if(productionLineIds.size() != 0) {
+                    for (int i = 1; i <= productionLineIds.get(0).getNumWorkstations(); ++i) {
+                        workstationNumberList.add(Integer.toString(i));
+                    }
                 }
+                partNumbers = partProvider.getAllParts();
             } catch (ParseException e) {
                 Log.d(TAG, "error code: " + e.getCode());
             }

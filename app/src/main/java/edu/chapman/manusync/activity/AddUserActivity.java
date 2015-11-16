@@ -6,7 +6,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.Spinner;
 
@@ -17,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.chapman.manusync.Hasher;
-import edu.chapman.manusync.MANUComponent;
 import edu.chapman.manusync.R;
 import edu.chapman.manusync.adapter.ProductionLineAdapter;
 import edu.chapman.manusync.dao.ProductionLineDAO;
@@ -133,7 +131,7 @@ public class AddUserActivity extends Activity {
         @Override
         protected void onPostExecute(List<ProductionLineDTO> productionLineDTOs) {
             adapter = new ProductionLineAdapter(AddUserActivity.this,
-                    R.layout.item_production_spinner, productionLineDTOs);
+                    R.layout.item_spinner, productionLineDTOs);
             initViews();
             progress.dismiss();
         }

@@ -28,7 +28,6 @@ public class MANUContract {
         public static final String COL_FIRST_NAME = "FirstName";
         public static final String COL_LAST_NAME = "LastName";
         public static final String COL_PRODUCTION_LINE_ID = "ProductionLineID";
-        public static final String COL_CREATION_DATE = "CreationDate";
 
         public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + " ("
                 + _ID + " INTEGER PRIMARY KEY,"
@@ -37,7 +36,6 @@ public class MANUContract {
                 + COL_FIRST_NAME + " TEXT NOT NULL,"
                 + COL_LAST_NAME + " TEXT NOT NULL,"
                 + COL_PRODUCTION_LINE_ID + " INTEGER,"
-                + COL_CREATION_DATE + " TEXT NOT NULL,"
                 + "FOREIGN KEY(" + COL_PRODUCTION_LINE_ID + ") REFERENCES " + ProductionLine.TABLE_NAME + "(" + ProductionLine._ID + ")"
                 + ");";
 
@@ -48,8 +46,7 @@ public class MANUContract {
                 COL_PASSWORD,
                 COL_FIRST_NAME,
                 COL_LAST_NAME,
-                COL_PRODUCTION_LINE_ID,
-                COL_CREATION_DATE
+                COL_PRODUCTION_LINE_ID
         };
     }
 
@@ -87,22 +84,17 @@ public class MANUContract {
 
         public static final String TABLE_NAME = "Part";
         public static final String COL_PART_ID = "PartNumber";
-        public static final String COL_PRODUCTION_LINE_ID = "ProductionLineID";
         public static final String COL_TAKT_TIME = "TaktTime";
 
         public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + " ("
                 + _ID + " INTEGER PRIMARY KEY,"
                 + COL_PART_ID + " TEXT NOT NULL,"
-                + COL_TAKT_TIME + " REAL,"
-                + COL_PRODUCTION_LINE_ID + " INTEGER,"
-                + "FOREIGN KEY(" + COL_PRODUCTION_LINE_ID + ") REFERENCES " + ProductionLine.TABLE_NAME + "(" + ProductionLine._ID + ")"
-                + ");";
+                + COL_TAKT_TIME + " REAL);";
 
         public static final String DROP_TABLE = "DROP TABLE IF EXISTS " + TABLE_NAME;
 
         public static final String[] COL_ARRAY = {
                 COL_PART_ID,
-                COL_PRODUCTION_LINE_ID,
                 COL_TAKT_TIME
         };
     }

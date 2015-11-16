@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
+import edu.chapman.manusync.BaseApplication;
 import edu.chapman.manusync.PasserSingleton;
 
 /**
@@ -42,6 +43,7 @@ public class ConnectivityListener {
             public void onReceive(Context context, Intent intent) {
                 if(isConnected()){
                     PasserSingleton.getInstance().setConnected(true);
+                    ((BaseApplication) context).downloadCloudInformation();
                 } else {
                     PasserSingleton.getInstance().setConnected(false);
                 }
