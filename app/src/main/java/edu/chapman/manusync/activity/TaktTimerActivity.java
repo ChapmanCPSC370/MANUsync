@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -14,6 +15,7 @@ import com.filippudak.ProgressPieView.ProgressPieView;
 
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 
 import edu.chapman.manusync.PasserSingleton;
 import edu.chapman.manusync.R;
@@ -37,7 +39,7 @@ public class TaktTimerActivity extends Activity {
     private LotDTO currentLot;
     private Timer timer;
     private int numCompletedItems;
-    private long totalTime, currentItemTime;
+    private long totalTime, currentItemTime = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +50,7 @@ public class TaktTimerActivity extends Activity {
         numCompletedItems = 1;
 
         totalTime = (long)((currentLot.getPart().getTaktTime() * 1000.0) * currentLot.getQuantity());
+        Log.d(TAG, "Total time: " + totalTime);
 
         initViews();
     }
@@ -57,6 +60,10 @@ public class TaktTimerActivity extends Activity {
         TextView lotNumber = (TextView) findViewById(R.id.takt_lot_number);
         quantity = (TextView) findViewById(R.id.takt_lot_quantity);
         taktTimer = (ProgressPieView) findViewById(R.id.takt_progress_timer);
+        taktTimer.setStartAngle(0);
+        taktTimer.setProgress(0);
+        taktTimer.setProgressColor(ContextCompat.getColor(this, R.color.color_belize_hole));
+
         pause = findViewById(R.id.takt_pause_btn);
         menu = findViewById(R.id.takt_menu_btn);
 
@@ -69,6 +76,7 @@ public class TaktTimerActivity extends Activity {
 
         partNumber.setText(currentLot.getPartNumberString());
         lotNumber.setText(currentLot.getLotNumber());
+
         quantity.setText(numCompletedItems + " of " + currentLot.getQuantityString());
 
         startTimer();
@@ -81,11 +89,14 @@ public class TaktTimerActivity extends Activity {
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-
                 TaktTimerActivity.this.currentItemTime += 100;
                 handler.post(new Runnable() {
                     public void run() {
-                        taktTimer.setText(Double.toString(TaktTimerActivity.this.currentItemTime / 1000.0));
+                        taktTimer.setProgress((int)((currentItemTime * 1.0)/totalTime * 100));
+                        taktTimer.setText(String.format("%d m %d s",
+                                TimeUnit.MILLISECONDS.toMinutes(currentItemTime),
+                                TimeUnit.MILLISECONDS.toSeconds(currentItemTime) -
+                                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(currentItemTime))));
                     }
                 });
             }
