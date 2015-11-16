@@ -10,16 +10,16 @@ public class CompletedLotDTO extends LotDTO {
     private long totalTime;
     private double averageTime;
 
-    public CompletedLotDTO(int productionLineNumber, int workstationNumber, int partNumber,
-                           int lotNumber, int quantity) {
-        super(productionLineNumber, workstationNumber, partNumber, lotNumber, quantity);
+    public CompletedLotDTO(ProductionLineDTO productionLine, int workstationNumber, PartDTO partNumber,
+                           String lotNumber, int quantity) {
+        super(productionLine, workstationNumber, partNumber, lotNumber, quantity);
         this.totalTime = 0;
         this.averageTime = 0.0;
     }
 
-    public CompletedLotDTO(int productionLineNumber, int workstationNumber, int partNumber,
-                           int lotNumber, int quantity, long totalTime) {
-        super(productionLineNumber, workstationNumber, partNumber, lotNumber, quantity);
+    public CompletedLotDTO(ProductionLineDTO productionLine, int workstationNumber, PartDTO partNumber,
+                           String lotNumber, int quantity, long totalTime) {
+        super(productionLine, workstationNumber, partNumber, lotNumber, quantity);
         this.totalTime = totalTime/1000;
         averageTime = ((double)this.totalTime/this.quantity);
     }

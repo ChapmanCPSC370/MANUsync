@@ -38,7 +38,7 @@ public class VerifyNewLotActivity extends Activity {
         productionLine.setText(currentLot.getProductionLineNumberString());
         workstationNumber.setText(currentLot.getWorkstationNumberString());
         partNumber.setText(currentLot.getPartNumberString());
-        lotNumber.setText(currentLot.getLotNumberString());
+        lotNumber.setText(currentLot.getLotNumber());
         quantity.setText(currentLot.getQuantityString());
 
         submit.setOnClickListener(new View.OnClickListener() {

@@ -50,7 +50,7 @@ public class TaktTimerActivity extends Activity {
         taktTimer = (ProgressPieView) findViewById(R.id.takt_progress_timer);
 
         partNumber.setText(currentLot.getPartNumberString());
-        lotNumber.setText(currentLot.getLotNumberString());
+        lotNumber.setText(currentLot.getLotNumber());
         quantity.setText(numCompletedItems + " of " +  currentLot.getQuantityString());
         taktTimer.setOnClickListener(new CompleteItemListener());
 
@@ -87,11 +87,11 @@ public class TaktTimerActivity extends Activity {
                 timer.cancel();
                 timer.purge();
                 //TODO: log this data in a database.
-                CompletedLotDTO completedLot = new CompletedLotDTO(currentLot.getProductionLineNumber(),
-                        currentLot.getWorkstationNumber(), currentLot.getPartNumber(),
-                        currentLot.getLotNumber(), currentLot.getQuantity(), totalTime);
-                taktTimer.setText("Total Time: " + completedLot.getTotalTime() + "s"
-                        + "\nAverage Time: " + completedLot.getAverageTime() + "s");
+//                CompletedLotDTO completedLot = new CompletedLotDTO(currentLot.getProductionLineNumber(),
+//                        currentLot.getWorkstationNumber(), currentLot.getPartNumber(),
+//                        currentLot.getLotNumber(), currentLot.getQuantity(), totalTime);
+//                taktTimer.setText("Total Time: " + completedLot.getTotalTime() + "s"
+//                        + "\nAverage Time: " + completedLot.getAverageTime() + "s");
             } else {
                 quantity.setText( (++numCompletedItems) + " of " + currentLot.getQuantity() );
             }

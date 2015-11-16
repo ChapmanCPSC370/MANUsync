@@ -107,10 +107,10 @@ public class NewLotActivity extends Activity {
             @Override
             public void onClick(View v) {
                 if(verifyData(v)) {
-                    LotDTO lot = new LotDTO(Integer.parseInt(productionLineNumbers.getSelectedItem().toString()),
+                    LotDTO lot = new LotDTO((ProductionLineDTO)productionLineNumbers.getSelectedItem(),
                             Integer.parseInt(workstationNumbers.getSelectedItem().toString()),
-                            Integer.parseInt(partNumberSpinner.getSelectedItem().toString()),
-                            Integer.parseInt(lotNumber.getText().toString()),
+                            (PartDTO) partNumberSpinner.getSelectedItem(),
+                            lotNumber.getText().toString(),
                             Integer.parseInt(quantity.getText().toString()));
 
                     PasserSingleton passer = PasserSingleton.getInstance();
