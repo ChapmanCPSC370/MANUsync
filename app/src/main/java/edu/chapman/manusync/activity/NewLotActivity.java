@@ -2,54 +2,54 @@ package edu.chapman.manusync.activity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 
+import com.parse.ParseException;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.inject.Inject;
 
 import edu.chapman.manusync.MANUComponent;
 import edu.chapman.manusync.PasserSingleton;
 import edu.chapman.manusync.R;
+import edu.chapman.manusync.dao.ProductionLineDAO;
+import edu.chapman.manusync.db.MANUContract;
 import edu.chapman.manusync.dto.LotDTO;
-import edu.chapman.manusync.provider.NewLotDataProvider;
+import edu.chapman.manusync.dto.ProductionLineDTO;
 
 /**
  * Created by Nicholas Corder - corde116@mail.chapman.edu on 10/11/2015.
  */
 public class NewLotActivity extends Activity {
+    private static final String TAG = NewLotActivity.class.getSimpleName();
 
-    private ArrayAdapter<Integer> productionLineAdapter, workstationNumberAdapter, partNumberAdapter;
+    private ArrayAdapter<String> productionLineAdapter, workstationNumberAdapter, partNumberAdapter;
     private Spinner productionLineNumbers, workstationNumbers, partNumbers;
     private EditText lotNumber, quantity;
     private Button startLot;
-
-    @Inject
-    /* package private */ NewLotDataProvider provider;
+    private ProductionLineDAO provider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_lot);
 
-        MANUComponent.Instance.get().inject(this);
-        productionLineAdapter = new ArrayAdapter<>(this,
-                R.layout.support_simple_spinner_dropdown_item,
-                provider.getProductionLineNumbers());
-        workstationNumberAdapter = new ArrayAdapter<>(this,
-                R.layout.support_simple_spinner_dropdown_item,
-                provider.getWorkstationNumbers());
-        partNumberAdapter = new ArrayAdapter<>(this,
-                R.layout.support_simple_spinner_dropdown_item,
-                provider.getPartNumbers());
+        provider = new ProductionLineDAO();
 
-        initViews();
+        new GetLotInfoTask().execute();
     }
 
     /* initializes views, and attaches adapters */
@@ -121,5 +121,52 @@ public class NewLotActivity extends Activity {
                 return true;
             }
         });
+    }
+
+    private class GetLotInfoTask extends AsyncTask<Void, Integer, Boolean> {
+
+        private ProgressDialog progress;
+        private List<String> productionLineIds, workstationNumbers, partNumbers;
+
+        @Override
+        protected void onPreExecute() {
+            progress = ProgressDialog.show(NewLotActivity.this, "Loading...",
+                    "Please wait while we load some data.", true);
+        }
+
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+            productionLineAdapter = new ArrayAdapter<>(NewLotActivity.this,
+                    R.layout.support_simple_spinner_dropdown_item,
+                    productionLineIds);
+            initViews();
+            progress.dismiss();
+//            workstationNumberAdapter = new ArrayAdapter<>(this,
+//                    R.layout.support_simple_spinner_dropdown_item,
+//                    workstationNumbers);
+//            partNumberAdapter = new ArrayAdapter<>(this,
+//                    R.layout.support_simple_spinner_dropdown_item,
+//                    partNumbers);
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            productionLineIds = new ArrayList<>();
+            workstationNumbers = new ArrayList<>();
+            partNumbers = new ArrayList<>();
+
+            try {
+                List<ProductionLineDTO> productionLines = provider.getAllProductionLines();
+                for(ProductionLineDTO pl : productionLines){
+                    productionLineIds.add(pl.getProductionLineId());
+                    workstationNumbers.add(Integer.toString(pl.getNumWorkstations()));
+                    partNumbers.add(pl.getProductCreated());
+                }
+            } catch (ParseException e) {
+                Log.d(TAG, "error code: " + e.getCode());
+            }
+
+            return null;
+        }
     }
 }

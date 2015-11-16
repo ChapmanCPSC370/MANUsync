@@ -31,4 +31,8 @@ public class PasserSingleton {
     public void setCurrentUser(UserDTO currentUser) { this.currentUser = currentUser; }
     public UserDTO getCurrentUser() { return this.currentUser; }
 
+    private boolean isConnected = false;
+
+    public void setConnected(boolean isConnected) { this.isConnected = isConnected; }
+    public boolean isConnected() { return isConnected; }
 }

@@ -1,30 +1,28 @@
 package edu.chapman.manusync.activity;
 
 import android.app.Activity;
-import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import com.dd.processbutton.iml.ActionProcessButton;
 import com.parse.ParseException;
-import com.parse.ParseUser;
-import com.parse.SignUpCallback;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Random;
-
-import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.List;
 
 import edu.chapman.manusync.Hasher;
 import edu.chapman.manusync.MANUComponent;
 import edu.chapman.manusync.R;
+import edu.chapman.manusync.adapter.ProductionLineAdapter;
+import edu.chapman.manusync.dao.ProductionLineDAO;
 import edu.chapman.manusync.dao.UserDAO;
+import edu.chapman.manusync.dto.ProductionLineDTO;
 import edu.chapman.manusync.dto.UserDTO;
 import edu.chapman.manusync.listener.EditProgressButtonListener;
 
@@ -34,23 +32,28 @@ import edu.chapman.manusync.listener.EditProgressButtonListener;
  * An activity which adds a new user to the database.
  */
 public class AddUserActivity extends Activity {
+    private static final String TAG = AddUserActivity.class.getSimpleName();
 
-    @Inject
-    /* package private */ UserDAO userHelper;
+    private UserDAO userProvider;
 
     private EditText username, password, firstName, lastName;
     private Spinner productionLine;
     private ActionProcessButton createUser;
     private CreateUserTask createUserTask;
 
+    private ProductionLineDAO productionLineProvider;
+    private ProductionLineAdapter adapter;
+    private ProductionLineDTO selectedProductionLine;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_user);
 
-        MANUComponent.Instance.get().inject(this);
+        productionLineProvider = new ProductionLineDAO();
+        userProvider = new UserDAO();
 
-        initViews();
+        new InitializeActivityTask().execute();
     }
 
     private void initViews() {
@@ -65,6 +68,7 @@ public class AddUserActivity extends Activity {
         createUser.setOnClickListener(new CreateUserOnClickListener());
         username.addTextChangedListener(new EditProgressButtonListener(createUser, username, this));
         password.addTextChangedListener(new EditProgressButtonListener(createUser, password, this));
+        productionLine.setAdapter(adapter);
     }
 
     @Override
@@ -82,7 +86,7 @@ public class AddUserActivity extends Activity {
         }
     }
 
-    private class CreateUserTask extends AsyncTask<Void, Integer, ParseException> {
+    private class CreateUserTask extends AsyncTask<Void, Integer, Boolean> {
 
         private String username, password, firstName, lastName;
 
@@ -94,73 +98,55 @@ public class AddUserActivity extends Activity {
             password = AddUserActivity.this.password.getText().toString();
             firstName = AddUserActivity.this.firstName.getText().toString();
             lastName = AddUserActivity.this.lastName.getText().toString();
+            selectedProductionLine = (ProductionLineDTO) productionLine.getSelectedItem();
         }
 
         @Override
-        protected void onPostExecute(ParseException e) {
-            if (!isCancelled()) {
-                if (e == null)
-                    AddUserActivity.this.finish();
-                else {
-                    AddUserActivity.this.createUser.setProgress(-1);
-
-                    AlertDialog.Builder builder = new AlertDialog.Builder(AddUserActivity.this);
-                    builder.setTitle("Something went wrong!");
-                    String errorMessage = "";
-                    switch (e.getCode()) {
-                        case ParseException.USERNAME_MISSING:
-                            errorMessage = "You did not enter a username!";
-                            break;
-                        case ParseException.PASSWORD_MISSING:
-                            errorMessage = "You did not enter a password!";
-                            break;
-                        case ParseException.USERNAME_TAKEN:
-                            errorMessage = "That username is already taken.";
-                            break;
-                        default:
-                            errorMessage = "Please make sure you have internet connectivity.";
-                            break;
-                    }
-                    builder.setMessage(errorMessage)
-                            .show();
-                }
-            }
+        protected void onPostExecute(Boolean aBoolean) {
+            createUser.setProgress(0);
+            finish();
         }
 
         @Override
-        protected ParseException doInBackground(Void... params) {
-
-            ParseUser user = new ParseUser();
-            user.setUsername(username);
-            user.setPassword(password);
-            user.put("FirstName", firstName);
-            user.put("LastName", lastName);
-            Random r = new Random();
-            user.put("ProductionLineId", r.nextInt(10) + 1);
-
-            ParseException error = null;
+        protected Boolean doInBackground(Void... params) {
             try {
-                user.signUp();
-            } catch (ParseException e) {
+                /* saving to cloud */
+                userProvider.createUser(new UserDTO(username, Hasher.SHA1(password), firstName, lastName,
+                        selectedProductionLine.getParseId(), selectedProductionLine.getProductionLineId()));
+            } catch (Exception e) {
                 e.printStackTrace();
-                error = e;
             }
+            return true;
+        }
+    }
 
-            UserDTO newUser = null;
-            if (error == null) {
-                try {
-                    //TODO: get the spinner to display available production lines.
-                    newUser = new UserDTO(username,
-                            Hasher.SHA1(password),
-                            firstName,
-                            lastName,
-                            r.nextInt(10) + 1);
-                    userHelper.createUser(newUser);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+    private class InitializeActivityTask extends AsyncTask<Void, Integer, List<ProductionLineDTO>> {
+
+        private ProgressDialog progress;
+
+        @Override
+        protected void onPreExecute() {
+            progress = ProgressDialog.show(AddUserActivity.this, "One Second...",
+                    "Please wait while we load some data.", true);
+        }
+
+        @Override
+        protected void onPostExecute(List<ProductionLineDTO> productionLineDTOs) {
+            adapter = new ProductionLineAdapter(AddUserActivity.this,
+                    R.layout.item_production_spinner, productionLineDTOs);
+            initViews();
+            progress.dismiss();
+        }
+
+        @Override
+        protected List<ProductionLineDTO> doInBackground(Void... params) {
+            List<ProductionLineDTO> allLines = new ArrayList<>();
+            try {
+                allLines = productionLineProvider.getAllProductionLines();
+            } catch (ParseException e) {
+                Log.d(TAG, "Error Code: " + e.getCode());
             }
-            return error;
+            return allLines;
         }
     }
 }

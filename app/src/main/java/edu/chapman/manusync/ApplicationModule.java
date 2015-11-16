@@ -45,4 +45,5 @@ public class ApplicationModule {
     DatabaseHelper provideDatabaseHelper(){
         Log.d("app module", "Creating db-helper");
         return new DatabaseHelper(application.getApplicationContext()); }
+
 }

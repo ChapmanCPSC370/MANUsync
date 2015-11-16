@@ -4,6 +4,11 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.parse.Parse;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,52 +27,36 @@ import edu.chapman.manusync.dto.ProductionLineDTO;
  */
 public class ProductionLineDAO {
 
-    private DatabaseHelper helper;
-    private SQLiteDatabase database;
-    private Context context;
-
-    @Inject
-    public ProductionLineDAO(Context context, DatabaseHelper helper){
-        this.context = context;
-        this.helper = helper;
-    }
-
-    public void open() throws SQLException {
-        database = helper.getWritableDatabase();
-    }
-
-    public void close() {
-        helper.close();
-    }
+    public ProductionLineDAO(){}
 
     /* Selects all information from the Production line table, fills the DTO's with the respective
      * data, then returns a list. It is best to think of each DTO as a tuple in the database.
      *
      * Returns null if there is no data found.
      */
-    public List<ProductionLineDTO> getAllProductionLines() throws SQLException, Exception {
-        open();
+    public List<ProductionLineDTO> getAllProductionLines() throws ParseException {
 
-        /* selects everything from production line table */
-        String[] tableColumns = new String[] { "*" };
-        Cursor cursor = database.query(MANUContract.ProductionLine.TABLE_NAME,
-                tableColumns, null, null, null, null, null);
+        ParseQuery<ParseObject> query = new ParseQuery<>(MANUContract.ProductionLine.TABLE_NAME);
+        query.orderByDescending(MANUContract.ProductionLine.COL_PRODUCTION_LINE_ID);
 
-        /* fill DTO's with data from database by iterating over the returned cursor */
-        List<ProductionLineDTO> tuples = new ArrayList<>();
-        if(cursor.getCount() == 0) tuples = null;
-
-        while(cursor.moveToNext()){
-            tuples.add(new ProductionLineDTO(cursor.getInt(cursor.getColumnIndex(MANUContract.ProductionLine._ID)),
-                    cursor.getString(cursor.getColumnIndex(MANUContract.ProductionLine.COL_PRODUCTION_LINE_ID)),
-                    cursor.getInt(cursor.getColumnIndex(MANUContract.ProductionLine.COL_NUM_WORKSTATIONS)),
-                    cursor.getString(cursor.getColumnIndex(MANUContract.ProductionLine.COL_PRODUCT_CREATED))));
+        List<ParseObject> parseObjects = query.find();
+        List<ProductionLineDTO> allProductionLines = new ArrayList<>();
+        for(ParseObject productionLine : parseObjects) {
+            allProductionLines.add(new ProductionLineDTO(productionLine.getObjectId(),
+                    productionLine.getString(MANUContract.ProductionLine.COL_PRODUCTION_LINE_ID),
+                    productionLine.getInt(MANUContract.ProductionLine.COL_NUM_WORKSTATIONS),
+                    productionLine.getString(MANUContract.ProductionLine.COL_PRODUCT_CREATED)));
         }
 
-        cursor.close();
-        close();
-
-        return tuples;
+        return allProductionLines;
     }
 
+    public ProductionLineDTO getProductionLine(String parseId) throws ParseException {
+        ParseQuery<ParseObject> query = new ParseQuery<ParseObject>(MANUContract.ProductionLine.TABLE_NAME);
+        ParseObject productionLine = query.get(parseId);
+        return new ProductionLineDTO(productionLine.getObjectId(),
+                productionLine.getString(MANUContract.ProductionLine.COL_PRODUCTION_LINE_ID),
+                productionLine.getInt(MANUContract.ProductionLine.COL_NUM_WORKSTATIONS),
+                productionLine.getString(MANUContract.ProductionLine.COL_PRODUCT_CREATED));
+    }
 }

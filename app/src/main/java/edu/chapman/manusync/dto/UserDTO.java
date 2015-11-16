@@ -5,8 +5,7 @@ package edu.chapman.manusync.dto;
  */
 public class UserDTO {
 
-    private String username, password, firstName, lastName, creationDate;
-    private int userId, productionLineId;
+    private String parseId, username, password, firstName, lastName, parseProductionLineId, productionLineId;
 
     /* used to log in user */
     public UserDTO(String username, String password) {
@@ -15,23 +14,26 @@ public class UserDTO {
     }
 
     /* used for creating a new user */
-    public UserDTO(String username, String password, String firstName, String lastName, int productionLineId) {
+    public UserDTO(String username, String password, String firstName, String lastName,
+                   String parseProductionLineId, String productionLineId) {
         this.username = username;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.parseProductionLineId = parseProductionLineId;
         this.productionLineId = productionLineId;
     }
 
     /* used for filling in information once logged in */
-    public UserDTO(int userId, String username, String password, String firstName, String lastName,
-                   int productionLineId, String creationDate) {
+    public UserDTO(String parseId, String username, String password, String firstName, String lastName,
+                   String parseProductionLineId, String productionLineId) {
+        this.parseId = parseId;
         this.username = username;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.parseProductionLineId = parseProductionLineId;
         this.productionLineId = productionLineId;
-        this.creationDate = creationDate;
     }
 
 
@@ -41,6 +43,7 @@ public class UserDTO {
     public String getPassword() { return this.password; }
     public String getFirstName() { return this.firstName; }
     public String getLastName() { return this.lastName; }
-    public int getProductionLineId() { return this.productionLineId; }
+    public String getParseProductionLineId() { return this.parseProductionLineId; }
+    public String getProductionLineId() { return this.productionLineId; }
 
 }

@@ -22,12 +22,12 @@ public class MANUContract {
         private Users() {
         }
 
-        public static final String TABLE_NAME = "Users";
+        public static final String TABLE_NAME = "User";
         public static final String COL_USERNAME = "Username";
         public static final String COL_PASSWORD = "Password";
         public static final String COL_FIRST_NAME = "FirstName";
         public static final String COL_LAST_NAME = "LastName";
-        public static final String COL_PRODUCTION_LINE_ID = "ProductionLineId";
+        public static final String COL_PRODUCTION_LINE_ID = "ProductionLineID";
         public static final String COL_CREATION_DATE = "CreationDate";
 
         public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + " ("
