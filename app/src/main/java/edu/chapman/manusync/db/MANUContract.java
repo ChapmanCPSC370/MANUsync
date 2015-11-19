@@ -142,10 +142,18 @@ public class MANUContract {
         private Issues() {}
 
         public static final String TABLE_NAME = "Issues";
-        public static final String REASON = "Reason";
+        public static final String COL_REASON = "Reason";
+        public static final String COL_WEIGHT = "Weight";
 
         public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + " ("
                 + _ID + " INTEGER PRIMARY KEY,"
-                + REASON + " TEXT NOT NULL);";
+                + COL_REASON + " TEXT NOT NULL);";
+
+        public static final String DROP_TABLE = "DROP TABLE IF EXISTS " + TABLE_NAME;
+
+        public static final String[] COL_ARRAY = {
+                COL_REASON,
+                COL_WEIGHT
+        };
     }
 }

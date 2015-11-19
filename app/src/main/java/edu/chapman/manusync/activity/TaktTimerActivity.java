@@ -1,6 +1,7 @@
 package edu.chapman.manusync.activity;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -19,6 +20,7 @@ import java.util.concurrent.TimeUnit;
 
 import edu.chapman.manusync.PasserSingleton;
 import edu.chapman.manusync.R;
+import edu.chapman.manusync.dialog.IssueDialog;
 import edu.chapman.manusync.dto.CompletedLotDTO;
 import edu.chapman.manusync.dto.LotDTO;
 
@@ -39,7 +41,7 @@ public class TaktTimerActivity extends Activity {
     private LotDTO currentLot;
     private Timer timer;
     private int numCompletedItems;
-    private long totalTime, currentItemTime = 1;
+    private long totalTime, taktTime, currentItemTime = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,8 +51,7 @@ public class TaktTimerActivity extends Activity {
         currentLot = PasserSingleton.getInstance().getCurrentLot();
         numCompletedItems = 1;
 
-        totalTime = (long)((currentLot.getPart().getTaktTime() * 1000.0) * currentLot.getQuantity());
-        Log.d(TAG, "Total time: " + totalTime);
+        taktTime = (long)(currentLot.getPart().getTaktTime() * 1000.0);
 
         initViews();
     }
@@ -92,7 +93,25 @@ public class TaktTimerActivity extends Activity {
                 TaktTimerActivity.this.currentItemTime += 100;
                 handler.post(new Runnable() {
                     public void run() {
-                        taktTimer.setProgress((int)((currentItemTime * 1.0)/totalTime * 100));
+                        /* finding percent needed to show progress */
+                        int progress = (int)((currentItemTime * 1.0)/taktTime * 100);
+                        if(progress > 100)
+                            progress = 100;
+
+                        taktTimer.setProgress(progress);
+
+                        /* Displaying appropriate color */
+                        if(progress < 80)
+                            taktTimer.setProgressColor(
+                                    ContextCompat.getColor(TaktTimerActivity.this, R.color.color_belize_hole));
+                        else if( progress < 90)
+                            taktTimer.setProgressColor(
+                                    ContextCompat.getColor(TaktTimerActivity.this, R.color.color_pumpkin));
+                        else
+                            taktTimer.setProgressColor(
+                                    ContextCompat.getColor(TaktTimerActivity.this, R.color.color_alizarin));
+
+                        /* Displaying current time */
                         taktTimer.setText(String.format("%d m %d s",
                                 TimeUnit.MILLISECONDS.toMinutes(currentItemTime),
                                 TimeUnit.MILLISECONDS.toSeconds(currentItemTime) -
@@ -105,7 +124,7 @@ public class TaktTimerActivity extends Activity {
 
     private void pauseTimer() {
         timer.cancel();
-        taktTimer.setBackgroundColor(ContextCompat.getColor(this, R.color.color_belize_hole));
+        taktTimer.setBackgroundColor(ContextCompat.getColor(this, R.color.color_concrete));
         taktTimer.setText(getResources().getString(R.string.takt_pause_message));
         taktTimer.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -122,6 +141,11 @@ public class TaktTimerActivity extends Activity {
         @Override
         public void onClick(View v) {
             totalTime += currentItemTime;
+
+            /* check if time is greater than takt-time + 10% */
+            if(((currentItemTime * 1.0)/taktTime) >= 1.10){
+                new IssueDialog(TaktTimerActivity.this).show();
+            }
 
             /* we have finished our current lot, now we will stop the timer and log the data */
             if( numCompletedItems == currentLot.getQuantity()) {
