@@ -84,6 +84,7 @@ public class TaktTimerActivity extends Activity {
     }
 
     private void startTimer() {
+        taktTimer.setTextSize(60);
         taktTimer.setOnClickListener(new CompleteItemListener());
         final Handler handler = new Handler();
         timer = new Timer();
@@ -125,6 +126,7 @@ public class TaktTimerActivity extends Activity {
     private void pauseTimer() {
         timer.cancel();
         taktTimer.setBackgroundColor(ContextCompat.getColor(this, R.color.color_concrete));
+        taktTimer.setTextSize(20);
         taktTimer.setText(getResources().getString(R.string.takt_pause_message));
         taktTimer.setOnClickListener(new View.OnClickListener() {
             @Override
