@@ -68,6 +68,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/add_user_production_line_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Production Line"
+            android:inputType="text" />
+
         <Spinner
             android:id="@+id/add_user_production_line_spnr"
             android:layout_width="wrap_content"
