@@ -1,1 +1,15 @@
-Hello World
+<!doctype html>
+<head> <meta charset="utf-8"> <title>My Parse App</title> <meta name="description" content="My Parse App"> <meta name="viewport" content="width=device-width"> <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script> <script type="text/javascript" src="http://www.parsecdn.com/js/parse-1.2.1.min.js"></script> </head>
+
+<body> <script type="text/javascript">
+
+Parse.initialize("rsl6FR3p81PmNQQPAr4Bkg4pAWpmDvCWepAmBCWk", "RRlwfNrKykgmHi5zFJCQFHkACmDVv3hIthIbW3lO");     
+Parse.Cloud.run('hello', {}, {
+  success: function(result) {
+    // result is 'Hello World'
+    alert(result);
+  },
+  error: function(error) {
+  }
+});
+</script> </body> </html>
