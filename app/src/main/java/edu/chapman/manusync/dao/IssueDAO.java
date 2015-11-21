@@ -12,6 +12,7 @@ import java.util.List;
 import edu.chapman.manusync.PasserSingleton;
 import edu.chapman.manusync.db.MANUContract;
 import edu.chapman.manusync.dto.IssueDTO;
+import edu.chapman.manusync.dto.LotDTO;
 
 /**
  * Created by niccorder - corde116@mail.chapman.edu on 11/16/15.
@@ -32,9 +33,17 @@ public class IssueDAO {
         Log.d(TAG, "size : " + foundIssues.size());
         for(ParseObject issue : foundIssues){
             allIssues.add(new IssueDTO(issue.getObjectId(),
-                    issue.getString(MANUContract.Issues.COL_WEIGHT)));
+                    issue.getString(MANUContract.Issues.COL_REASON)));
         }
 
         return allIssues;
+    }
+
+    public void logIssue(LotDTO lot, IssueDTO issue) {
+        ParseObject lotIssue = new ParseObject(MANUContract.LotIssues.TABLE_NAME);
+        lotIssue.put(MANUContract.LotIssues.COL_ISSUE_ID, issue.getIssueId());
+        lotIssue.put(MANUContract.LotIssues.COL_LOT_ID, lot.getParseID());
+
+        lotIssue.saveEventually();
     }
 }

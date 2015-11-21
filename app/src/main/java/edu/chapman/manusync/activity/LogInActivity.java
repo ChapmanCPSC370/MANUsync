@@ -41,7 +41,7 @@ public class LogInActivity extends AppCompatActivity {
         initViews();
 
         /* used to pre-fill EditTexts with a dummy user account for faster logging in */
-        /* setForTesting(); */
+        //setForTesting();
     }
 
     private void setForTesting() {
@@ -119,6 +119,7 @@ public class LogInActivity extends AppCompatActivity {
                 user = provider.logInUser(user);
             } catch (Exception e) {
                 user = null;
+                e.printStackTrace();
             }
             return user;
         }

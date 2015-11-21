@@ -39,6 +39,7 @@ public class UserDTO {
 
     /* accessors and mutators limited to hide data */
 
+    public String getParseId() { return this.parseId; }
     public String getUsername() { return this.username; }
     public String getPassword() { return this.password; }
     public String getFirstName() { return this.firstName; }

@@ -1,6 +1,7 @@
 package edu.chapman.manusync.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import edu.chapman.manusync.dto.IssueDTO;
  * Created by niccorder - corde116@mail.chapman.edu on 11/16/15.
  */
 public class IssueListAdapter extends ArrayAdapter<IssueDTO> {
+    private static final String TAG = IssueListAdapter.class.getSimpleName();
 
     private Context context;
     private int resource;
@@ -39,6 +41,7 @@ public class IssueListAdapter extends ArrayAdapter<IssueDTO> {
         IssueDTO issue = objects.get(position);
 
         if(issue != null) {
+            Log.d(TAG, "setting item: " + issue.getIssueId());
             TextView textView = (TextView) view.findViewById(R.id.spinner_tv);
             textView.setText(issue.getReason());
         }

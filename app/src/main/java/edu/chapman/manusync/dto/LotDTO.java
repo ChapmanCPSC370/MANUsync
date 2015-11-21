@@ -7,9 +7,9 @@ package edu.chapman.manusync.dto;
  */
 public class LotDTO {
 
+    protected String lotNumber, parseID;
     protected ProductionLineDTO productionLine;
     protected PartDTO part;
-    protected String lotNumber;
     protected int workstationNumber, quantity;
 
     public LotDTO(ProductionLineDTO productionLine, int workstationNumber,
@@ -21,12 +21,35 @@ public class LotDTO {
         this.quantity = quantity;
     }
 
+    public LotDTO(String parseID, String lotNumber, ProductionLineDTO productionLine,
+                  int workstationNumber, PartDTO part, int quantity) {
+        this.parseID = parseID;
+        this.lotNumber = lotNumber;
+        this.productionLine = productionLine;
+        this.workstationNumber = workstationNumber;
+        this.part = part;
+        this.quantity = quantity;
+    }
+
+    public LotDTO(LotDTO lotDTO) {
+        this.parseID = lotDTO.parseID;
+        this.lotNumber = lotDTO.lotNumber;
+        this.productionLine = lotDTO.productionLine;
+        this.workstationNumber = lotDTO.workstationNumber;
+        this.part = lotDTO.part;
+        this.quantity = lotDTO.quantity;
+    }
+
     /* Accessors and mutators */
+    public String getParseID() { return this.parseID; }
     public ProductionLineDTO getProductionLineNumber() { return this.productionLine; }
     public int getWorkstationNumber() { return this.workstationNumber; }
     public PartDTO getPart() { return this.part; }
     public String getLotNumber() { return this.lotNumber; }
     public int getQuantity() { return this.quantity; }
+    public double getTotalTaktTime() { return this.quantity * this.part.getTaktTime(); }
+
+    public void setParseID(String parseID) { this.parseID = parseID; }
 
     /* Acessors and mutators for string data */
     public String getProductionLineNumberString() { return productionLine.getProductionLineId(); }

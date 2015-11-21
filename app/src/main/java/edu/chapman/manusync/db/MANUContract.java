@@ -107,9 +107,13 @@ public class MANUContract {
         public static final String TABLE_NAME = "Lot";
         public static final String COL_LOT_NUMBER = "LotNumber";
         public static final String COL_USER_ID = "UserID";
-        public static final String COL_PART_NUMBER_ID = "PartNumberID";
+        public static final String COL_PART_NUMBER_ID = "PartID";
+        public static final String COL_WORKSTATION_NUMBER = "WorkstationNumber";
+        public static final String COL_TAKT_TIME = "TaktTime";
         public static final String COL_ACTUAL_TIME = "ActualTime";
-        public static final String COL_IS_ON_TIME = "IsOnTime";
+        public static final String COL_IS_ON_TIME = "OnTime";
+        public static final String COL_FINISHED = "Finished";
+        public static final String COL_NUM_PARTS = "NumParts";
         public static final String COL_ISSUE_ID = "IssueID";
 
         public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + " ("
@@ -155,5 +159,15 @@ public class MANUContract {
                 COL_REASON,
                 COL_WEIGHT
         };
+    }
+
+    public static final class LotIssues implements BaseColumns {
+
+        /* disallows class to be created */
+        private LotIssues() {}
+
+        public static final String TABLE_NAME = "LotIssues";
+        public static final String COL_LOT_ID = "LotID";
+        public static final String COL_ISSUE_ID = "IssueID";
     }
 }

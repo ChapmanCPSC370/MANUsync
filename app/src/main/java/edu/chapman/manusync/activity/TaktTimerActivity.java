@@ -2,6 +2,7 @@ package edu.chapman.manusync.activity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.filippudak.ProgressPieView.ProgressPieView;
+import com.parse.ParseException;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -20,7 +22,9 @@ import java.util.concurrent.TimeUnit;
 
 import edu.chapman.manusync.PasserSingleton;
 import edu.chapman.manusync.R;
+import edu.chapman.manusync.dao.LotDAO;
 import edu.chapman.manusync.dialog.IssueDialog;
+import edu.chapman.manusync.dialog.MenuDialog;
 import edu.chapman.manusync.dto.CompletedLotDTO;
 import edu.chapman.manusync.dto.LotDTO;
 
@@ -39,6 +43,7 @@ public class TaktTimerActivity extends Activity {
     private View pause, menu;
 
     private LotDTO currentLot;
+    private LotDAO lotProvider;
     private Timer timer;
     private int numCompletedItems;
     private long totalTime, taktTime, currentItemTime = 1;
@@ -48,6 +53,7 @@ public class TaktTimerActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_takt_timer);
 
+        lotProvider = new LotDAO(PasserSingleton.getInstance().getCurrentUser());
         currentLot = PasserSingleton.getInstance().getCurrentLot();
         numCompletedItems = 1;
 
@@ -74,6 +80,14 @@ public class TaktTimerActivity extends Activity {
                 pauseTimer();
             }
         });
+        menu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CompletedLotDTO cancelledLot =
+                        new CompletedLotDTO(TaktTimerActivity.this.currentLot, TaktTimerActivity.this.totalTime, false);
+                new MenuDialog(TaktTimerActivity.this, cancelledLot).show();
+            }
+        });
 
         partNumber.setText(currentLot.getPartNumberString());
         lotNumber.setText(currentLot.getLotNumber());
@@ -95,17 +109,17 @@ public class TaktTimerActivity extends Activity {
                 handler.post(new Runnable() {
                     public void run() {
                         /* finding percent needed to show progress */
-                        int progress = (int)((currentItemTime * 1.0)/taktTime * 100);
-                        if(progress > 100)
+                        int progress = (int) ((currentItemTime * 1.0) / taktTime * 100);
+                        if (progress > 100)
                             progress = 100;
 
                         taktTimer.setProgress(progress);
 
-                        /* Displaying appropriate color */
-                        if(progress < 80)
+                        /* Displaying appropriate color dependant on progress */
+                        if (progress < 80)
                             taktTimer.setProgressColor(
                                     ContextCompat.getColor(TaktTimerActivity.this, R.color.color_belize_hole));
-                        else if( progress < 90)
+                        else if (progress < 90)
                             taktTimer.setProgressColor(
                                     ContextCompat.getColor(TaktTimerActivity.this, R.color.color_pumpkin));
                         else
@@ -123,11 +137,13 @@ public class TaktTimerActivity extends Activity {
         }, 1, 100);
     }
 
+    /* pause the timer and ask for a reason for pause */
     private void pauseTimer() {
         timer.cancel();
         taktTimer.setBackgroundColor(ContextCompat.getColor(this, R.color.color_concrete));
         taktTimer.setTextSize(20);
         taktTimer.setText(getResources().getString(R.string.takt_pause_message));
+        new IssueDialog(this, currentLot).show();
         taktTimer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -144,23 +160,35 @@ public class TaktTimerActivity extends Activity {
         public void onClick(View v) {
             totalTime += currentItemTime;
 
-            /* check if time is greater than takt-time + 10% */
+            /* check if time is greater than takt-time + 10%,Pause the takt-timer, then ask for a reason. */
             if(((currentItemTime * 1.0)/taktTime) >= 1.10){
-                new IssueDialog(TaktTimerActivity.this).show();
+                pauseTimer();
             }
 
             /* we have finished our current lot, now we will stop the timer and log the data */
             if( numCompletedItems == currentLot.getQuantity()) {
                 timer.cancel();
                 timer.purge();
-                //TODO: log this data in a database.
-//                CompletedLotDTO completedLot = new CompletedLotDTO(currentLot.getProductionLineNumber(),
-//                        currentLot.getWorkstationNumber(), currentLot.getPartNumber(),
-//                        currentLot.getLotNumber(), currentLot.getQuantity(), totalTime);
-//                taktTimer.setText("Total Time: " + completedLot.getTotalTime() + "s"
-//                        + "\nAverage Time: " + completedLot.getAverageTime() + "s");
+                CompletedLotDTO completedLot = new CompletedLotDTO(currentLot, totalTime, true);
+                try {
+                    lotProvider.finishLot(completedLot);
+                } catch (ParseException e) {
+                    e.getMessage();
+                }
+
+                Toast.makeText(TaktTimerActivity.this, "Completed lot: " + currentLot.getLotNumber(), Toast.LENGTH_LONG)
+                        .show();
+                Intent intent = new Intent(TaktTimerActivity.this, MainMenuActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                TaktTimerActivity.this.startActivity(intent);
+                TaktTimerActivity.this.finish();
             } else {
-                quantity.setText( (++numCompletedItems) + " of " + currentLot.getQuantity() );
+                /* Move on to next part successfully, lot the time neededfor part, refresh all information */
+                quantity.setText((++numCompletedItems) + " of " + currentLot.getQuantity());
+                currentItemTime = 0;
+                taktTimer.setProgress(0);
+                taktTimer.setProgressColor(
+                        ContextCompat.getColor(TaktTimerActivity.this, R.color.color_belize_hole));
             }
         }
     }

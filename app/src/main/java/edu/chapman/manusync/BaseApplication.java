@@ -51,7 +51,6 @@ public class BaseApplication extends Application {
             @Override
             public void done(List<ParseObject> objects, ParseException e) {
                 if (e == null) {
-                    Log.d(TAG, "Saving Users " + objects.size());
                     ParseObject.pinAllInBackground(objects);
                 } else {
                     Log.d(TAG, "Could not save users.");
@@ -64,7 +63,6 @@ public class BaseApplication extends Application {
             @Override
             public void done(List<ParseObject> objects, ParseException e) {
                 if (e == null) {
-                    Log.d(TAG, "Saving production lines " + objects.size());
                     ParseObject.pinAllInBackground(objects);
                 } else {
                     Log.d(TAG, "Could not save production lines.");
@@ -77,7 +75,6 @@ public class BaseApplication extends Application {
             @Override
             public void done(List<ParseObject> objects, ParseException e) {
                 if (e == null) {
-                    Log.d(TAG, "Saving parts " + objects.size());
                     ParseObject.pinAllInBackground(objects);
                 } else {
                     Log.d(TAG, "Could not save parts.");
@@ -90,7 +87,6 @@ public class BaseApplication extends Application {
             @Override
             public void done(List<ParseObject> objects, ParseException e) {
                 if (e == null) {
-                    Log.d(TAG, "Saving Issues " + objects.size());
                     ParseObject.pinAllInBackground(objects);
                 } else {
                     Log.d(TAG, "Could not save issues.");

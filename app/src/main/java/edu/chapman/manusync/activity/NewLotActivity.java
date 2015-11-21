@@ -25,6 +25,7 @@ import edu.chapman.manusync.PasserSingleton;
 import edu.chapman.manusync.R;
 import edu.chapman.manusync.adapter.PartListAdapter;
 import edu.chapman.manusync.adapter.ProductionLineAdapter;
+import edu.chapman.manusync.dao.LotDAO;
 import edu.chapman.manusync.dao.PartDAO;
 import edu.chapman.manusync.dao.ProductionLineDAO;
 import edu.chapman.manusync.dto.LotDTO;
@@ -43,6 +44,7 @@ public class NewLotActivity extends Activity {
     private Button startLot;
     private ProductionLineDAO productionLineProvider;
     private PartDAO partProvider;
+    private LotDAO lotProvider;
     private ProductionLineAdapter productionLineAdapter;
     private PartListAdapter partListAdapter;
     private ArrayAdapter<String> workstationNumberAdapter;
@@ -60,6 +62,7 @@ public class NewLotActivity extends Activity {
 
         productionLineProvider = new ProductionLineDAO();
         partProvider = new PartDAO();
+        lotProvider = new LotDAO(PasserSingleton.getInstance().getCurrentUser());
 
         new GetLotInfoTask().execute();
     }
@@ -107,16 +110,7 @@ public class NewLotActivity extends Activity {
             @Override
             public void onClick(View v) {
                 if(verifyData(v)) {
-                    LotDTO lot = new LotDTO((ProductionLineDTO)productionLineNumbers.getSelectedItem(),
-                            Integer.parseInt(workstationNumbers.getSelectedItem().toString()),
-                            (PartDTO) partNumberSpinner.getSelectedItem(),
-                            lotNumber.getText().toString(),
-                            Integer.parseInt(quantity.getText().toString()));
-
-                    PasserSingleton passer = PasserSingleton.getInstance();
-                    passer.setCurrentLot(lot);
-                    Intent intent = new Intent(NewLotActivity.this, VerifyNewLotActivity.class);
-                    startActivity(intent);
+                    new AddNewLotTask().execute();
                 }
             }
 
@@ -197,6 +191,46 @@ public class NewLotActivity extends Activity {
                 Log.d(TAG, "error code: " + e.getCode());
             }
 
+            return null;
+        }
+    }
+
+    private class AddNewLotTask extends AsyncTask<Void, Integer, Boolean> {
+
+        private LotDTO lot;
+        private ProgressDialog progress;
+
+        @Override
+        protected void onPreExecute() {
+            progress = ProgressDialog.show(NewLotActivity.this, "One Second...",
+                    "Please wait while we save the lot data.", true);
+
+            lot = new LotDTO((ProductionLineDTO)productionLineNumbers.getSelectedItem(),
+                    Integer.parseInt(workstationNumbers.getSelectedItem().toString()),
+                    (PartDTO) partNumberSpinner.getSelectedItem(),
+                    lotNumber.getText().toString(),
+                    Integer.parseInt(quantity.getText().toString()));
+            super.onPreExecute();
+        }
+
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+
+            PasserSingleton passer = PasserSingleton.getInstance();
+            passer.setCurrentLot(lot);
+            Intent intent = new Intent(NewLotActivity.this, VerifyNewLotActivity.class);
+
+            startActivity(intent);
+            super.onPostExecute(aBoolean);
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            try {
+                lot = lotProvider.addNewLot(lot);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             return null;
         }
     }
