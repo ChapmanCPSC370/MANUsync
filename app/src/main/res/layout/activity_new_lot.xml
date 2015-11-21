@@ -58,6 +58,7 @@
             android:id="@+id/lot_number_et"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:singleLine="true"
             android:hint="Lot Number" />
     </com.wrapp.floatlabelededittext.FloatLabeledEditText>
     <com.wrapp.floatlabelededittext.FloatLabeledEditText
@@ -69,6 +70,7 @@
             android:id="@+id/quantity_et"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:singleLine="true"
             android:hint="Quantity" />
     </com.wrapp.floatlabelededittext.FloatLabeledEditText>
     <info.hoang8f.widget.FButton
