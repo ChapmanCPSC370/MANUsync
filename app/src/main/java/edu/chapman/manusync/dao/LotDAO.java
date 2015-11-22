@@ -32,7 +32,7 @@ public class LotDAO {
         ParseObject newLot = new ParseObject(MANUContract.Lot.TABLE_NAME);
         newLot.put(MANUContract.Lot.COL_LOT_NUMBER, lotDTO.getLotNumber());
         newLot.put(MANUContract.Lot.COL_USER_ID, user.getParseId());
-        newLot.put(MANUContract.Lot.COL_PART_NUMBER_ID, lotDTO.getPart().getParseId());
+        newLot.put(MANUContract.Lot.COL_PART_NUMBER_ID, lotDTO.getPart().getPartNumber());
         newLot.put(MANUContract.Lot.COL_WORKSTATION_NUMBER, lotDTO.getWorkstationNumberString());
         newLot.put(MANUContract.Lot.COL_FINISHED_PARTS, lotDTO.getFinishedParts());
         newLot.put(MANUContract.Lot.COL_NUM_PARTS, lotDTO.getQuantity());
