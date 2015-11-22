@@ -72,6 +72,7 @@ public class LotDAO {
             lotQuery.fromLocalDatastore();
         ParseObject lot = lotQuery.get(completedLot.getParseID());
 
+        lot.put(MANUContract.Lot.COL_FINISHED_PARTS, completedLot.getFinishedParts());
         lot.put(MANUContract.Lot.COL_ACTUAL_TIME, completedLot.getTotalTimeSeconds());
         lot.put(MANUContract.Lot.COL_FINISHED, completedLot.getIsFinished());
         if(completedLot.getTotalTimeSeconds() <= completedLot.getTotalTaktTime())

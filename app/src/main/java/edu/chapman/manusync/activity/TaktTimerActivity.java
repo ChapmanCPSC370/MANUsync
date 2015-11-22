@@ -169,6 +169,7 @@ public class TaktTimerActivity extends Activity {
             if( numCompletedItems == currentLot.getQuantity()) {
                 timer.cancel();
                 timer.purge();
+                currentLot.setFinishedParts(numCompletedItems); // Count the last part
                 CompletedLotDTO completedLot = new CompletedLotDTO(currentLot, totalTime, true);
                 try {
                     lotProvider.finishLot(completedLot);
