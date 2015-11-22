@@ -57,6 +57,7 @@ public class LogInActivity extends AppCompatActivity {
 
         logIn.setMode(ActionProcessButton.Mode.ENDLESS);
         username.addTextChangedListener(new EditProgressButtonListener(logIn));
+        username.requestFocus();
         password.addTextChangedListener(new EditProgressButtonListener(logIn));
 
         logIn.setOnClickListener(new View.OnClickListener() {
