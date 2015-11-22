@@ -15,6 +15,7 @@ import java.util.Arrays;
 import edu.chapman.manusync.PasserSingleton;
 import edu.chapman.manusync.R;
 import edu.chapman.manusync.activity.LogInActivity;
+import edu.chapman.manusync.activity.TaktTimerActivity;
 import edu.chapman.manusync.adapter.TaktMenuListAdapter;
 import edu.chapman.manusync.dao.LotDAO;
 import edu.chapman.manusync.dto.CompletedLotDTO;
@@ -34,7 +35,7 @@ public class MenuDialog extends Dialog {
     private LotDAO lotProvider;
     private Context context;
 
-    public MenuDialog(Context context, CompletedLotDTO lot) {
+    public MenuDialog(final Context context, CompletedLotDTO lot) {
         super(context);
         this.context = context;
         this.lot = lot;
@@ -61,6 +62,7 @@ public class MenuDialog extends Dialog {
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         MenuDialog.this.dismiss();
                         MenuDialog.this.context.startActivity(intent);
+                        ((TaktTimerActivity) MenuDialog.this.context).finish();
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }

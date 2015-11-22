@@ -113,6 +113,7 @@ public class MANUContract {
         public static final String COL_ACTUAL_TIME = "ActualTime";
         public static final String COL_IS_ON_TIME = "OnTime";
         public static final String COL_FINISHED = "Finished";
+        public static final String COL_FINISHED_PARTS = "FinishedParts";
         public static final String COL_NUM_PARTS = "NumParts";
         public static final String COL_ISSUE_ID = "IssueID";
 

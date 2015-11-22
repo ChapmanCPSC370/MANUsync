@@ -183,7 +183,16 @@ public class TaktTimerActivity extends Activity {
                 TaktTimerActivity.this.startActivity(intent);
                 TaktTimerActivity.this.finish();
             } else {
-                /* Move on to next part successfully, lot the time neededfor part, refresh all information */
+                /* Move on to next part successfully, log the time needed for part, refresh all information
+                 * Store the part in parse DB (if no internet connection store it locally and save eventually.
+                 */
+                currentLot.setFinishedParts(numCompletedItems);
+                try {
+                    lotProvider.finishPart(new CompletedLotDTO(currentLot, totalTime, false));
+                } catch (ParseException e) {
+                    e.getMessage();
+                }
+                //updating visual, and local variables.
                 quantity.setText((++numCompletedItems) + " of " + currentLot.getQuantity());
                 currentItemTime = 0;
                 taktTimer.setProgress(0);
