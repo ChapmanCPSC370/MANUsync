@@ -4,15 +4,24 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
+
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import javax.inject.Inject;
 
+import edu.chapman.manusync.Hasher;
+import edu.chapman.manusync.PasserSingleton;
 import edu.chapman.manusync.db.DatabaseHelper;
 import edu.chapman.manusync.db.MANUContract;
+import edu.chapman.manusync.dto.ProductionLineDTO;
 import edu.chapman.manusync.dto.UserDTO;
 
 /**
@@ -23,98 +32,58 @@ import edu.chapman.manusync.dto.UserDTO;
  *  a user.
  */
 public class UserDAO {
+    private static final String TAG = UserDAO.class.getSimpleName();
 
-    private DatabaseHelper helper;
-    /* temporary public until all DAO classes are created */
-    public SQLiteDatabase database;
-    private Context context;
+    private ProductionLineDAO productionLineProvider;
 
-    @Inject
-    public UserDAO(Context context, DatabaseHelper helper) {
-        this.context = context;
-        this.helper = helper;
+    public UserDAO() {
+        this.productionLineProvider = new ProductionLineDAO();
     }
 
-    public void open() throws SQLException {
-        database = helper.getWritableDatabase();
-    }
+    public UserDTO createUser(UserDTO userDTO) throws Exception {
+        ParseObject user = new ParseObject(MANUContract.Users.TABLE_NAME);
+        user.put(MANUContract.Users.COL_USERNAME, userDTO.getUsername());
+        user.put(MANUContract.Users.COL_PASSWORD, userDTO.getPassword());
+        user.put(MANUContract.Users.COL_FIRST_NAME, userDTO.getFirstName());
+        user.put(MANUContract.Users.COL_LAST_NAME, userDTO.getLastName());
+        user.put(MANUContract.Users.COL_PRODUCTION_LINE_ID, userDTO.getParseProductionLineId());
+        user.pinInBackground();
+        user.saveEventually();
 
-    public void close() {
-        helper.close();
-    }
-
-    /**
-     * Creates a user account and requires that the DTO have specific information.
-     *
-     * @param userDTO must contain username, password, first/last name and production line ID
-     * @return returns a filled UserDTO object if creation was sucessful.
-     * @throws SQLException
-     * @throws Exception
-     */
-    public UserDTO createUser(UserDTO userDTO) throws SQLException, Exception {
-        open();
-        ContentValues values = new ContentValues();
-
-        values.put(MANUContract.Users.COL_USERNAME, userDTO.getUsername());
-        values.put(MANUContract.Users.COL_PASSWORD, userDTO.getPassword());
-        values.put(MANUContract.Users.COL_FIRST_NAME, userDTO.getFirstName());
-        values.put(MANUContract.Users.COL_LAST_NAME, userDTO.getLastName());
-        values.put(MANUContract.Users.COL_PRODUCTION_LINE_ID, userDTO.getProductionLineId());
-
-        //Setting creation date
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-        String creationDate = dateFormat.format(Calendar.getInstance().getTime());
-        values.put(MANUContract.Users.COL_CREATION_DATE, creationDate);
-
-        long returnCode = database.insert(MANUContract.Users.TABLE_NAME, null, values);
-
-        close();
-
-        if(returnCode == -1) {
-            throw new Exception("There was an issue inserting into the database.");
-        }
-
-        return new UserDTO((int)returnCode, userDTO.getUsername(), userDTO.getPassword(),
-                userDTO.getFirstName(), userDTO.getLastName(), userDTO.getProductionLineId(),
-                creationDate);
+        return userDTO;
     }
 
     /**
-     * A standard method which will test the inputed information against a database to verify
-     * the user is logged in. Currently throws an exception if there is an issue with logging in.
+     * Tries to log in user. If there is internet connectivity it tries the user against the cloud DB
+     * if there is no internet connection it tries the user against the local parse DB.
      *
-     * TODO: Change return type based on error code (null if incorrect user/pass), exception if genuine error.
      *
      * @param userDTO requires username and SHA1 encrypted password.
      * @return returns a filled UserDTO object with user information.
      * @throws Exception
      */
     public UserDTO logInUser(UserDTO userDTO) throws Exception {
-        open();
-        String[] tableColumns = new String[] { "*" };
-        String whereClause = MANUContract.Users.COL_USERNAME + " = ? AND "
-                + MANUContract.Users.COL_PASSWORD + " = ?";
-        String[] whereArgs = new String[] {
-                userDTO.getUsername(),
-                userDTO.getPassword()
-        };
+        ParseQuery<ParseObject> userQuery = ParseQuery.getQuery("User");
+        userQuery.whereEqualTo("Username", userDTO.getUsername());
+        userQuery.whereEqualTo("Password", userDTO.getPassword());
 
-        Cursor cursor = database.query(MANUContract.Users.TABLE_NAME, tableColumns, whereClause, whereArgs, null, null, null);
-        if(cursor.moveToFirst()) {
-            UserDTO loggedInUser = new UserDTO(cursor.getInt(cursor.getColumnIndex(MANUContract.Users._ID)),
-                    cursor.getString(cursor.getColumnIndex(MANUContract.Users.COL_USERNAME)),
-                    cursor.getString(cursor.getColumnIndex(MANUContract.Users.COL_PASSWORD)),
-                    cursor.getString(cursor.getColumnIndex(MANUContract.Users.COL_FIRST_NAME)),
-                    cursor.getString(cursor.getColumnIndex(MANUContract.Users.COL_LAST_NAME)),
-                    cursor.getInt(cursor.getColumnIndex(MANUContract.Users.COL_PRODUCTION_LINE_ID)),
-                    cursor.getString(cursor.getColumnIndex(MANUContract.Users.COL_CREATION_DATE)));
-            cursor.close();
-            close();
-            return loggedInUser;
-        } else {
-            cursor.close();
-            close();
-            throw new Exception("Incorrect username or password.");
+        if(!PasserSingleton.getInstance().isConnected())
+            userQuery.fromLocalDatastore();
+        List<ParseObject> foundUser = userQuery.find();
+
+        if(foundUser.size() != 0){
+            for(ParseObject user : foundUser){
+                /* necessary to get production line number */
+                ProductionLineDTO productionLine =
+                        productionLineProvider.getProductionLine(user.getString("ProductionLineID"));
+
+                /* Now we have all the information so we return all the user information */
+                return new UserDTO(user.getObjectId(), user.getString("Username"),
+                        user.getString("Password"), user.getString("FirstName"),
+                        user.getString("LastName"), user.getString("ProductionLineID"),
+                        productionLine.getProductionLineId());
+            }
         }
+        return null;
     }
 }

@@ -23,10 +23,8 @@ public interface MANUComponent {
      * and makes the code much more readable. Please look into Google's Dagger - 2 http://google.github.io/dagger/
      * for any further explainations, questions, or examples.
      */
-    void inject(LogInActivity logInActivity);
+
     void inject(MainMenuActivity mainMenuActivity);
-    void inject(NewLotActivity newLotActivity);
-    void inject(AddUserActivity addUserActivity);
 
     final class Instance {
         private static MANUComponent component;

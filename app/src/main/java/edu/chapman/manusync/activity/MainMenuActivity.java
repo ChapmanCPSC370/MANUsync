@@ -2,6 +2,7 @@ package edu.chapman.manusync.activity;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.GridView;
 
 import javax.inject.Inject;
@@ -13,7 +14,7 @@ import edu.chapman.manusync.adapter.MainMenuViewAdapter;
 /**
  * Created by Nicholas Corder - corde116@mail.chapman.edu on 10/11/2015.
  */
-public class MainMenuActivity extends Activity {
+public class MainMenuActivity extends AppCompatActivity {
 
     private GridView applications;
 

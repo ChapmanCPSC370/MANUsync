@@ -22,13 +22,12 @@ public class MANUContract {
         private Users() {
         }
 
-        public static final String TABLE_NAME = "Users";
+        public static final String TABLE_NAME = "User";
         public static final String COL_USERNAME = "Username";
         public static final String COL_PASSWORD = "Password";
         public static final String COL_FIRST_NAME = "FirstName";
         public static final String COL_LAST_NAME = "LastName";
-        public static final String COL_PRODUCTION_LINE_ID = "ProductionLineId";
-        public static final String COL_CREATION_DATE = "CreationDate";
+        public static final String COL_PRODUCTION_LINE_ID = "ProductionLineID";
 
         public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + " ("
                 + _ID + " INTEGER PRIMARY KEY,"
@@ -37,7 +36,6 @@ public class MANUContract {
                 + COL_FIRST_NAME + " TEXT NOT NULL,"
                 + COL_LAST_NAME + " TEXT NOT NULL,"
                 + COL_PRODUCTION_LINE_ID + " INTEGER,"
-                + COL_CREATION_DATE + " TEXT NOT NULL,"
                 + "FOREIGN KEY(" + COL_PRODUCTION_LINE_ID + ") REFERENCES " + ProductionLine.TABLE_NAME + "(" + ProductionLine._ID + ")"
                 + ");";
 
@@ -48,8 +46,7 @@ public class MANUContract {
                 COL_PASSWORD,
                 COL_FIRST_NAME,
                 COL_LAST_NAME,
-                COL_PRODUCTION_LINE_ID,
-                COL_CREATION_DATE
+                COL_PRODUCTION_LINE_ID
         };
     }
 
@@ -87,22 +84,17 @@ public class MANUContract {
 
         public static final String TABLE_NAME = "Part";
         public static final String COL_PART_ID = "PartNumber";
-        public static final String COL_PRODUCTION_LINE_ID = "ProductionLineID";
         public static final String COL_TAKT_TIME = "TaktTime";
 
         public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + " ("
                 + _ID + " INTEGER PRIMARY KEY,"
                 + COL_PART_ID + " TEXT NOT NULL,"
-                + COL_TAKT_TIME + " REAL,"
-                + COL_PRODUCTION_LINE_ID + " INTEGER,"
-                + "FOREIGN KEY(" + COL_PRODUCTION_LINE_ID + ") REFERENCES " + ProductionLine.TABLE_NAME + "(" + ProductionLine._ID + ")"
-                + ");";
+                + COL_TAKT_TIME + " REAL);";
 
         public static final String DROP_TABLE = "DROP TABLE IF EXISTS " + TABLE_NAME;
 
         public static final String[] COL_ARRAY = {
                 COL_PART_ID,
-                COL_PRODUCTION_LINE_ID,
                 COL_TAKT_TIME
         };
     }
@@ -115,9 +107,14 @@ public class MANUContract {
         public static final String TABLE_NAME = "Lot";
         public static final String COL_LOT_NUMBER = "LotNumber";
         public static final String COL_USER_ID = "UserID";
-        public static final String COL_PART_NUMBER_ID = "PartNumberID";
+        public static final String COL_PART_NUMBER_ID = "PartID";
+        public static final String COL_WORKSTATION_NUMBER = "WorkstationNumber";
+        public static final String COL_TAKT_TIME = "TaktTime";
         public static final String COL_ACTUAL_TIME = "ActualTime";
-        public static final String COL_IS_ON_TIME = "IsOnTime";
+        public static final String COL_IS_ON_TIME = "OnTime";
+        public static final String COL_FINISHED = "Finished";
+        public static final String COL_FINISHED_PARTS = "FinishedParts";
+        public static final String COL_NUM_PARTS = "NumParts";
         public static final String COL_ISSUE_ID = "IssueID";
 
         public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + " ("
@@ -150,10 +147,28 @@ public class MANUContract {
         private Issues() {}
 
         public static final String TABLE_NAME = "Issues";
-        public static final String REASON = "Reason";
+        public static final String COL_REASON = "Reason";
+        public static final String COL_WEIGHT = "Weight";
 
         public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + " ("
                 + _ID + " INTEGER PRIMARY KEY,"
-                + REASON + " TEXT NOT NULL);";
+                + COL_REASON + " TEXT NOT NULL);";
+
+        public static final String DROP_TABLE = "DROP TABLE IF EXISTS " + TABLE_NAME;
+
+        public static final String[] COL_ARRAY = {
+                COL_REASON,
+                COL_WEIGHT
+        };
+    }
+
+    public static final class LotIssues implements BaseColumns {
+
+        /* disallows class to be created */
+        private LotIssues() {}
+
+        public static final String TABLE_NAME = "LotIssues";
+        public static final String COL_LOT_ID = "LotID";
+        public static final String COL_ISSUE_ID = "IssueID";
     }
 }
